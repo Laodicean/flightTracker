@@ -1,0 +1,24 @@
+<html>
+<body>
+    <div>
+        Some ordered numbers between {{ min }} and {{ max }}:
+    </div>
+    <ol>
+        {% for line in lines %}
+            <li>{{ line }} </li>
+        {% end %}
+    </ol>
+    <form method="POST">
+        <table>
+            <tr>
+            <td>Minimum:
+            <td><input type="text" name="min" placeholder="Min"><br>
+            <tr>
+            <td>Maximum:
+            <td><input type="text" name="max" placeholder="Max"><br>
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+    </body>
+</html>
+
