@@ -1,13 +1,34 @@
 
 def getFlightSolutions(query):
-    flightList[query.numFlights] = searchFlights(query)
+    flightList[query.numFlights] = searchFlights(query,graph)
     flightList = sortFlights(flightList,query)
-    print "THINK"
     return flightList
 
-def searchFlights(query):
+def searchFlights(query,graph):
 	import queue as Q
 	openQueue = Q.queue
+	closedQueue = Q.queue
+	solutions = []
+	solCounter = 0
+	firstTrip = Trip(query.date,query.time,query.start,query.end,0,0,0)
+	openQueue.put(firstTrip)
+	while( not openeQueue.empty() & solCounter < query.numFlights):
+		currTrip = openeQueue.get()
+		if (currTrip.current == currTrip.end):
+			solutions.append(currTrip)
+			solCounter += 1
+		else:
+			appendList = []
+			appendList = graph.getFlights()
+			for currFlight in appendList:
+				newTrip = currTrip.clone()
+				newTrip.appendFlight(currFlight)
+				if (currTrip not in closedQueue & currTrip not in openQueue):
+					openQueue.put(newTrip)
+
+		
+		closedQueue.put(currTrip)
+	return solutions
 
 
 def sortFlight(flightList,query):
