@@ -1,4 +1,8 @@
 
+COST_PREF = 0
+TIME_PREF = 0
+POINT_PREF = 0
+
 def getFlightSolutions(query):
     flightList[query.numFlights] = searchFlights(query,graph)
     flightList = sortFlights(flightList,query)
