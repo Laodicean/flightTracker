@@ -10,15 +10,26 @@ Class Flight:
 
 
 Class Trip:
-        def __init__(self,date,time,start,end,duration,cost,ffPoint):
+        def __init__(self,date,time,start,end,duration,cost,ffPoint,airlinePref):
         	self.date = date
 			self.time = time
 			self.start = start
+			self.current = start
 			self.end = end
 			self.duration = duration
 			self.cost = cost
 			self.ffPoint = ffPoint
+			self.airlinePref = airlinePref
 			self.listFlights = []
+
+		def appendFlight(self,newFlight):
+			self.current = newFlight.end
+			self.duration += newFlight.duration
+			self.cost += newFlight.cost
+			if self.airlinePref == newFlight.airline:
+				self.ffPoint += newFlight.getFFPoints()
+			self.listFlights.append(newFlight)
+
                 
 Class Query:
 	def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
