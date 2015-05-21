@@ -19,7 +19,7 @@ def searchFlights(query,graph):
 			solCounter += 1
 		else:
 			appendList = []
-			appendList = graph.getFlights()
+			appendList = graph.getFlights(currTrip)
 			for currFlight in appendList:
 				newTrip = currTrip.clone()
 				newTrip.appendFlight(currFlight)
