@@ -11,6 +11,10 @@ application = tornado.web.Application([
     #Example page handlers.
     (r"/", pages.IndexHandler),
     (r"/random", pages.RandomHandler),
+    (r"/sseTest", pages.SSEHandler),
+    (r"/sseTestPage", pages.SSETestPageHandler),
+    (r"/query", pages.QueryHandler),
+    (r"/landing", pages.LandingHandler),
 ])
 
 if __name__ == "__main__":
