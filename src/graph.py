@@ -1,15 +1,26 @@
 import sys, datetime
-
+import algorithm
+import flightClasses
 class Flight():
     def __init__(self, date, time, start, end, duration, airline, cost):
-    	self.date = date
-    	self.time = time
+        self.date = date
+        self.time = time
+        self.start = start
+        self.end = end
+        self.duration = duration
+        self.airline = airline
+        self.cost = cost
+class Query():
+    def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
+	self.date = date
+	self.time = time
 	self.start = start
 	self.end = end
-	self.duration = duration
-	self.airline = airline
-	self.cost = cost
-
+	self.pref1 = pref1
+	self.pref2 = pref2
+	self.pref3 = pref3
+	self.numFlights = numFlights
+        
 class City():
     def __init__(self, name):
         self.name = name
@@ -21,9 +32,6 @@ class graph():
         self.cities = cities
 
     def getFlights(trip):
-
-        
-    
         potFlights = []
         
         current = trip.current
@@ -34,19 +42,14 @@ class graph():
         dateSplit = currDate.split('/')
 
         tripCal = dateTime()
-        tripCal.replace(dateSplit[0], dateSplit[1], dateSplit[2], timeSplit[0], timeSplit[1], 0)
+        tripCal.replace(dateSplit[0], dateSplit[1], dateSplit[2],
+                        timeSplit[0], timeSplit[1], 0)
         print tripCal
         flightEstimate = trip.listFlights[-1].duration
         timeSplit[0] += duration%60
-        
-        
 
-
+        
         return potFlights
-
-
-        
-
 
 
 def getIndex(cities, searchingFor):
@@ -62,7 +65,6 @@ def getIndex(cities, searchingFor):
 
 filename = sys.argv[1]
 f = open(filename, 'r')
-
 for flight in f.read().strip().split("["):
     if flight != "":
        
@@ -79,14 +81,13 @@ for flight in f.read().strip().split("["):
 
         myFlight = Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
         cities[foundCity].flights.append(myFlight)
-        
-        
- #   flights = []
-#    flights.append()
-    
-    
 
 
-#Class Flight:
-#    def __init__ (self, date, time, start, end, duration, airline, cost):
-
+filename = sys.argv[2]
+q = open(filename, 'r')
+for query in q.read().strip().split("["):
+    if query != "": 
+        parts = query.split(',')
+        #WARNING SEE SPEC FOR PROPER PREFERENCES INPUT FORMAT
+        myQuery = Query(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],parts[6],parts[7])
+        algorithm.getFlightSolutions(myQuery,cities)
