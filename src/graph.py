@@ -60,26 +60,28 @@ def getIndex(cities, searchingFor):
             
 
 
-filename = sys.argv[1]
-f = open(filename, 'r')
-for flight in f.read().strip().split("["):
-    if flight != "":
+'filename = sys.argv[1]
+def makeGraph(filename):
+    f = open(filename, 'r')
+    for flight in f.read().strip().split("["):
+        if flight != "":
        
-        parts = flight.split(',')
-        cities = []
+            parts = flight.split(',')
+            cities = []
 
-        #Checking if we already have the city
-        foundCity = getIndex(cities, parts[2])
-        #if the city did not already exist
-        if foundCity == 'no':
-            cities.append(City(parts[2]))
-            foundCity = -1
-            print cities[foundCity].name
+            #Checking if we already have the city
+            foundCity = getIndex(cities, parts[2])
+            #if the city did not already exist
+            if foundCity == 'no':
+                cities.append(City(parts[2]))
+                foundCity = -1
+                print cities[foundCity].name
 
-        myFlight = Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
-        cities[foundCity].flights.append(myFlight)
+            myFlight = Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
+            cities[foundCity].flights.append(myFlight)
+    return graph(cities)
 
-
+'''
 filename = sys.argv[2]
 q = open(filename, 'r')
 for query in q.read().strip().split("["):
@@ -88,3 +90,4 @@ for query in q.read().strip().split("["):
         #WARNING SEE SPEC FOR PROPER PREFERENCES INPUT FORMAT
         myQuery = Query(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],parts[6],parts[7])
         algorithm.getFlightSolutions(myQuery,cities)
+'''
