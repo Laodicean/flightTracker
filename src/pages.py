@@ -9,13 +9,21 @@ class LandingHandler(tornado.web.RequestHandler):
     """
     def get(self):
         loader = tornado.template.Loader("templates/")
-        self.write(loader.load("landing.html").generate())
+        self.write(loader.load("landing.html").generate(
+            cities=["Candy Mountain", "Atlantis", "Zion", "Gotham City", "Pallet Town"],
+            ))
 
 
 class QueryHandler(tornado.web.RequestHandler):
     """Class which handles a request for flights"""
     def get(self):
-        self.write("Error")
-    def post(self):
         loader = tornado.template.Loader("templates/")
-        self.write(loader.load("queryResponse.html").generate())
+        #setup and call search function
+        #
+        #
+        a = self.request.arguments
+
+        self.write(loader.load("queryResponse.html").generate(
+            var=[i+"->"+str(a[i]) for i in a.keys()],
+            uri=self.request.uri
+            ))
