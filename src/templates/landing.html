@@ -1,15 +1,58 @@
 <html>
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
 <body>
-<button onclick="SendQuery()">asd</button>
-<div id="response">
+<div id="query-wrapper">
+    <h2>Flight Scheduler</h2>
+    <div>Please enter your preferences below.</div>
+    <p>
+    <form>
+        Travel Date: <input type="date" name="tDate">
+        Earliest Departure Time: <input type="time" name="depTime"><br>
+        From
+        <select name="origCity">
+            {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+            {% end %}
+        </select>
+        to
+        <select name="desCity">
+            {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+            {% end %}
+        </select><br>
+        <p>
+            How important are each of these to you? (3 being the most important) <br>
+            Minimal cost
+            <input type="range" name="prefCost" min="1" max="3"> <br>
+            Minimal time travelling
+            <input type="range" name="prefTime" min="1" max="3"> <br>
+            Maximum Frequent Flyer Points
+            <input type="range" name="prefPoints" min="1" max="3"> <br>
+        </p>
+        I would like to see <input type="number" name="number"> offers<br>
+        <p> <input type="button" onclick="SendQuery()" value="Submit Query!"></button> </p>
+    </form>
+    </p>
+</div>
+<div id="response-wrapper">
+    The response will load here!
 </div>
 <script type="text/javascript">
 function SendQuery() {
+
     request=new XMLHttpRequest();
-    request.open("GET","query",false);
-    request.send();
+
+    args=$('form').serialize(); //Get form args and set metadata for request
+
+    request.open("GET","query?"+args,false);//Initalise request.
+
+
+    request.send();//Make request. Blocking function
+
     response=request.responseText;
-    document.getElementById("response").innerHTML = response;
+    document.getElementById("response-wrapper").innerHTML = response;
 }
 </script>
 </body>
