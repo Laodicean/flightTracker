@@ -1,20 +1,21 @@
-
 COST_PREF = 0
 TIME_PREF = 0
 POINT_PREF = 0
-
-def getFlightSolutions(query):
-    flightList[query.numFlights] = searchFlights(query,graph)
+import flightClasses
+import Queue
+def getFlightSolutions(query,cities):
+    flightList[query.numFlights] = searchFlights(query,cities)
     flightList = sortFlights(flightList,query)
     return flightList
 
-def searchFlights(query,graph):
-	import queue as Q
-	openQueue = Q.queue
-	closedQueue = Q.queue
+def searchFlights(query,cities):
+	q = Queue.Queue()
+	visited = Queue.Queue()
+	openQueue = q
+	closedQueue = visited
 	solutions = []
 	solCounter = 0
-	firstTrip = Trip(query.date,query.time,query.start,query.end,0,0,0)
+	firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,0,0,0)
 	openQueue.put(firstTrip)
 	while( not openeQueue.empty() & solCounter < query.numFlights):
 		currTrip = openeQueue.get()
