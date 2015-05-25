@@ -17,7 +17,7 @@ class Trip:
 		self.start = start
 		self.current = start
 		self.end = end
-		self.currCal = currCal
+		self.currCal = startCal
 		self.cost = cost
 		self.ffPoint = ffPoint
 		self.airlinePref = airlinePref
@@ -25,8 +25,8 @@ class Trip:
 
 	def appendFlight(self,newFlight):
 		self.current = newFlight.end
-		self.currCal += addDuration(self.currCal,newFlight)
-		self.currCal += newFlight.currCal
+		self.currCal = convertTime(newFlight.date, newFlight.time)
+		self.currCal = addDuration(self.currCal,newFlight)
 		self.cost += newFlight.cost
 		if self.airlinePref == newFlight.airline:
 			self.ffPoint += newFlight.getFFPoints()
