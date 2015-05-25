@@ -1,0 +1,16 @@
+<html>
+<body>
+<button onclick="SendQuery()">asd</button>
+<div id="response">
+</div>
+<script type="text/javascript">
+function SendQuery() {
+    request=new XMLHttpRequest();
+    request.open("GET","query",false);
+    request.send();
+    response=request.responseText;
+    document.getElementById("response").innerHTML = response;
+}
+</script>
+</body>
+</html>
