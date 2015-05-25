@@ -31,24 +31,21 @@ class graph():
     def __init__(self, cities):
         self.cities = cities
 
-    def getFlights(trip):
+    def getFlights(trip, graph):
+
+        
+    
         potFlights = []
         
         current = trip.current
-        
-        currTime = trip.listFlights[-1].time
-        timeSplit = parts = currTime.split(':')
-        currDate = trip.listFlights[-1].date
-        dateSplit = currDate.split('/')
 
-        tripCal = dateTime()
-        tripCal.replace(dateSplit[0], dateSplit[1], dateSplit[2],
-                        timeSplit[0], timeSplit[1], 0)
-        print tripCal
-        flightEstimate = trip.listFlights[-1].duration
-        timeSplit[0] += duration%60
-
+        originIndex = (graph, current)
         
+        #for everything that trip.curr connects to
+        for flight in graph[originIndex].flights:
+            if (convertTime(flight.date, flight.time) > trip.currCal):
+                potFlights.add(flight)
+                tripCal = dateTime()
         return potFlights
 
 
