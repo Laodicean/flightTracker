@@ -10,13 +10,12 @@ class Flight:
 
 
 class Trip:
-	def __init__(self,date,time,start,end,duration,cost,ffPoint,airlinePref):
-		self.date = date
-		self.time = time
+	def __init__(self,date,time,start,end,currCal,cost,ffPoint,airlinePref):
+		self.startCal = convertTime(date,time)
 		self.start = start
 		self.current = start
 		self.end = end
-		self.duration = duration
+		self.currCal = currCal
 		self.cost = cost
 		self.ffPoint = ffPoint
 		self.airlinePref = airlinePref
@@ -24,13 +23,20 @@ class Trip:
 
 	def appendFlight(self,newFlight):
 		self.current = newFlight.end
-		self.duration += newFlight.duration
+		self.currCal += addDuration(self.currCal,newFlight)
+		self.currCal += newFlight.currCal
 		self.cost += newFlight.cost
 		if self.airlinePref == newFlight.airline:
 			self.ffPoint += newFlight.getFFPoints()
 		self.listFlights.append(newFlight)
+	def addDuration(startDate, flight):
+	#Brayden, here is the function to get the time delay between the entered flight and the current time,
+	#as well as the time of the flight (its probably easier to do it all in one)
+		
 
-                
+	def convertTime(date,time):
+		#This is something that you can use to convert date and time to a dateTime
+        
 class Query:
 	def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
 		self.date = date
