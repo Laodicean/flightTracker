@@ -1,37 +1,26 @@
 #Pages definition file. Page response handler classes should be defined here.
 import tornado.web
 import tornado.template
-import random
 
-
-class IndexHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Hello, world!")
-
-class RandomHandler(tornado.web.RequestHandler):
+class LandingHandler(tornado.web.RequestHandler):
+    """Class which allows users to make requests for flights
+    Additionally, request responses will be displayed as an element of the
+    page this class genereates.
+    """
     def get(self):
         loader = tornado.template.Loader("templates/")
-
-        minimum = self.get_argument("min", "1")
-        maximum = self.get_argument("max", "1000")
-
-        if not minimum.isnumeric():
-            minimum = 1
-        else:
-            minimum = int(minimum)
-
-        if not maximum.isnumeric():
-            maximum = 1000
-        else:
-            maximum = int(maximum)
-
-
-        lines = []
-        for i in range(10):
-            lines.append(random.randint(minimum,maximum))
-
-        lines = sorted(lines)
-
-        self.write(loader.load("test.html").generate(lines = lines,min=minimum, max=maximum))
+        self.write(loader.load("landing.html").generate())
     def post(self):
-        self.get()
+
+
+class QueryHandler(tornado.web.RequestHandler):
+    """Class which handles a request for flights"""
+    counter = 0;
+    def get(self):
+        self.write("Hello get " + str(self.counter))
+        self.counter += 1
+    def post(self):
+        self.write("Hello post " + str(self.counter))
+        self.counter -= 1
+
+       get(self)

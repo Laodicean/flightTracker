@@ -9,8 +9,9 @@ PORT = 8080
 
 application = tornado.web.Application([
     #Example page handlers.
-    (r"/", pages.IndexHandler),
-    (r"/random", pages.RandomHandler),
+    (r"/", pages.LandingHandler),
+    (r"/landing", pages.LandingHandler),
+    (r"/query", pages.QueryHandler),
 ])
 
 if __name__ == "__main__":
