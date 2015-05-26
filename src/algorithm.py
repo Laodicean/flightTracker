@@ -3,7 +3,12 @@ TIME_PREF = 0
 POINT_PREF = 0
 import flightClasses
 import Queue
-def getFlightSolutions(query,cities):
+
+def getFlightSolutions(query,graph):
+    """Retrieves a list of Trips containing soultions to the given query
+    query: query object containing parameters for the search
+    graph: Graph of cities
+    """
     flightList[query.numFlights] = searchFlights(query,cities)
     flightList = sortFlights(flightList,query)
     return flightList
@@ -31,7 +36,7 @@ def searchFlights(query,cities):
 				if (currTrip not in closedQueue & currTrip not in openQueue):
 					openQueue.put(newTrip)
 
-		
+
 		closedQueue.put(currTrip)
 	return solutions
 
@@ -59,8 +64,8 @@ def sortFlight(flightList,query):
 						swap = 1
 			counter += 1
 		passes += 1
-        
-                    
+
+
 
 def compare(one,two,comparator):
            if (comparator == POINT_PREF):
