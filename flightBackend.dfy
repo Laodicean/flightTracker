@@ -65,7 +65,6 @@ predicate correctTime(x: Time)
 		ensures x.minute < 60;
 		ensures x.hour >= 0;
 		ensures x.hour < 24;
-
 		
 predicate correctDate(x:Date)
 	reads x;
@@ -86,6 +85,21 @@ predicate correctQuery (x: Query)
 		ensures x.numFlight > 0;
 		//second thoughts...we're not parsing the data here... so we need to have correct datas ...
 		//might need to ensure everything else is not null or valid
+
+//need to make pre-post for following, ensuring that data collected from these are correct
+//just so we can use it for later onwards, unless we don't have too?
+predicate correctFlight (x: Flight)
+	reads x;
+
+predicate correctCity (x: City)
+	reads x;
+
+predicate correctTrip (x: Trip)
+    reads x;
+
+predicate correctGraph (x: Graph)
+    reads x;
+
 
 method getFlightSolutions(query: Query, graph: Graph) returns (flightList: array<Trip>)
 	requires query != null;
