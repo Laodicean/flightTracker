@@ -4,6 +4,7 @@ datatype preferences = time | cost | flyerPoints
 class Date {
 	var day: int;
 	var month: int;
+
 }
 
 class Time {
@@ -22,10 +23,6 @@ class Query {
 	var numFlight: int;
 }
 
-class City {
-	
-}
-
 class Flight {
 	var date: Date;
 	var time: Time;
@@ -34,16 +31,32 @@ class Flight {
 	var duration: int;
 	var airline: string;
 	var cost: int;
+}
+
+class City {
+	var name : string;
+	var flights : array<Flight>;
+}
+
+class Trip {
+	var start: string;
+	var current: string;
+	var end: string;
+	//carrCal??
+	var cost: int;
+	var ffPoint: int;
+	var airLinePref: preferences;
+	var listFlights: array<Flight>;
 
 }
 
 class Graph {
-
-
+	var cities: array<City>;
 }
 
-predicate correctPref(c:preferences)
-	ensures c in {time, cost, flyerPoints} ; 
+predicate correctPref(c:preferences) 
+	ensures c in {time, cost, flyerPoints} ;
+
 
 predicate correctTime(x: Time)
 	reads x;
@@ -52,6 +65,7 @@ predicate correctTime(x: Time)
 		ensures x.minute < 60;
 		ensures x.hour >= 0;
 		ensures x.hour < 24;
+
 		
 predicate correctDate(x:Date)
 	reads x;
@@ -76,6 +90,9 @@ predicate correctQuery (x: Query)
 method getFlightSolutions(query: Query, graph: Graph) returns (flightList: array<Trip>)
 	requires query != null;
 	requires correctQuery(query);
+	{
+
+	}
 	//need to do something about the graph
 
 
