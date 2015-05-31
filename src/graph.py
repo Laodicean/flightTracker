@@ -1,40 +1,22 @@
 import sys, datetime
 import algorithm
 import flightClasses
-class Flight():
-    def __init__(self, date, time, start, end, duration, airline, cost):
-        self.date = date
-        self.time = time
-        self.start = start
-        self.end = end
-        self.duration = duration
-        self.airline = airline
-        self.cost = cost
-class Query():
-    def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
-	self.date = date
-	self.time = time
-	self.start = start
-	self.end = end
-	self.pref1 = pref1
-	self.pref2 = pref2
-	self.pref3 = pref3
-	self.numFlights = numFlights
         
 class City():
     def __init__(self, name):
         self.name = name
         self.flights = []
-
-       
+  
 class graph():
+    """ contains a list of cities that hold information from std input""" 
     def __init__(self, cities):
+    """creates(initialises a city object """
         self.cities = cities
-
-    def getFlights(trip, graph):
-
         
-    
+    def getFlights(trip, graph):
+    """gets all VALID flights related to the latest city from the input TRIP
+    from the graph"""
+        
         potFlights = []
         
         current = trip.current
@@ -48,20 +30,21 @@ class graph():
                 tripCal = dateTime()
         return potFlights
 
-
 def getIndex(cities, searchingFor):
+"""returns the index of a specified city in the cities list """
     i = -1
     for city in cities:
         i+=1
         if city.name == searchingFor:
             return i
-
     return 'no'
             
 
 
-'filename = sys.argv[1]
+filename = sys.argv[1]
 def makeGraph(filename):
+"""creates a graph(list of cities) from the flightdata file
+returns a list of cities (each containing a list of flights)"""
     f = open(filename, 'r')
     for flight in f.read().strip().split("["):
         if flight != "":
@@ -77,7 +60,7 @@ def makeGraph(filename):
                 foundCity = -1
                 print cities[foundCity].name
 
-            myFlight = Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
+            myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
             cities[foundCity].flights.append(myFlight)
     return graph(cities)
 
