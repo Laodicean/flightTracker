@@ -17,7 +17,7 @@ def searchFlights(query,g):
     closedSet = set()
     solutions = []
     solCounter = 0
-    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,0,0,0,"")
+    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,query.airlinePref)
     openQueue.put(firstTrip)
     while( not openQueue.empty() and solCounter < query.numFlights):
         currTrip = openQueue.get()

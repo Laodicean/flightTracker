@@ -21,14 +21,14 @@ class Flight:
         return s
 
 class Trip:
-    def __init__(self,date,time,start,end,currCal,cost,ffPoint,airlinePref):
+    def __init__(self,date,time,start,end,airlinePref):
         self.startCal = self.convertTime(date,time)
         self.start = start
         self.current = start
         self.end = end
         self.currCal = self.startCal
-        self.cost = cost
-        self.ffPoint = ffPoint
+        self.cost = 0
+        self.ffPoint = 0
         self.airlinePref = airlinePref
         self.listFlights = []
 
@@ -106,10 +106,22 @@ class Query:
         self.time = time
         self.start = start
         self.end = end
-        self.pref1 = pref1
-        self.pref2 = pref2
-        self.pref3 = pref3
+        self.airlinePref = ""
+        self.pref1 = self.getPref(pref1)
+        self.pref2 = self.getPref(pref2)
+        self.pref3 = self.getPref(pref3)
         self.numFlights = numFlights
+
+    def getPref(self,preference):
+    	if (preference != "cost" and preference != "time"):
+    		if (preference == "None"):
+    			self.airlinePref = ""
+    		else:
+    			self.airlinePref = preference
+    		return "ffPoint"
+    	else:
+    		return preference
+
     def __repr__(self):
         res = "date:"+self.date
         res += " time:"+self.time
