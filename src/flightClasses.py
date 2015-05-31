@@ -24,6 +24,12 @@ class Trip:
 		self.listFlights = []
 
 	def appendFlight(self,newFlight):
+		""" This adds the flight 'newFlight' onto the end of the list of flights in 'listFlights'
+		Takes in:
+			Flight: newFlight
+		returns:
+
+		"""
 		self.current = newFlight.end
 		self.currCal = convertTime(newFlight.date, newFlight.time)
 		self.currCal = addDuration(self.currCal,newFlight)
@@ -32,12 +38,26 @@ class Trip:
 			self.ffPoint += newFlight.getFFPoints()
 		self.listFlights.append(newFlight)
 		
-	def addDuration(startDate, flight):
+	def addDuration(self,startDate, flight):
+		""" This adds the time that the entered flight takes onto the current time
+		Takes in:
+			DateTime: startDate
+			flight: flight
+		returns:
+			DateTime: endDate
+		"""
 	    #increment by the duration of the flight in minutes
     	endDate = startDate + datetime.timedelta(minutes = flight.duration)
 		return endDate
 
-	def convertTime(date,time):
+	def convertTime(self,date,time):
+		""" converts the given and time to a DateTime object
+		Taken in:
+			String: date
+			String: time
+		returns:
+			DateTime: dateTime
+		"""
 	    #Creates a datetime from the paramatised date and time
         #Create time object
         timeSplit = time.split(':')
