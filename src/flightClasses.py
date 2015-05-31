@@ -41,34 +41,34 @@ class Trip:
 	def addDuration(self,startDate, flight):
 		""" This adds the time that the entered flight takes onto the current time
 		Takes in:
-			DateTime: startDate
-			flight: flight
+		DateTime: startDate
+		flight: flight
 		returns:
-			DateTime: endDate
+		DateTime: endDate
 		"""
-	    #increment by the duration of the flight in minutes
-    	endDate = startDate + datetime.timedelta(minutes = flight.duration)
+		#increment by the duration of the flight in minutes
+		endDate = startDate + datetime.timedelta(minutes = flight.duration)
 		return endDate
 
 	def convertTime(self,date,time):
 		""" converts the given and time to a DateTime object
 		Taken in:
-			String: date
-			String: time
+		String: date
+		String: time
 		returns:
-			DateTime: dateTime
+		DateTime: dateTime
 		"""
-	    #Creates a datetime from the paramatised date and time
-        #Create time object
-        timeSplit = time.split(':')
+		#Creates a datetime from the paramatised date and time
+		#Create time object
+		timeSplit = time.split(':')
 		timeObj = datetime.time(timeSplit[0], timeSplit[1]); #hours, minutes
-        #Create date object
-        currDate = date
-        dateSplit = currDate.split('/')
-        dateObj = datetime.date(dateSplit[2], dateSplit[0], dateSplit[1]) #year, day, month
-        #combine into datetime object
-        dateTime = datetime.datetime.combine(currDateObj, currTimeObj)
-        return dateTime
+		#Create date object
+		currDate = date
+		dateSplit = currDate.split('/')
+		dateObj = datetime.date(dateSplit[2], dateSplit[0], dateSplit[1]) #year, day, month
+		#combine into datetime object
+		dateTime = datetime.datetime.combine(currDateObj, currTimeObj)
+		return dateTime
         
 class Query:
 	def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
@@ -84,6 +84,6 @@ class Query:
 
 
 COST_PREF = 0
-TIME_PREF = 0
-POINT_PREF = 0
+TIME_PREF = 1
+POINT_PREF = 2
 # As a data structure for the results, since we can store flightplans as a list of flights, we'll be using an array of flightPlans (ordred by preference)
