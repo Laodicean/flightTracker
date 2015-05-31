@@ -11,14 +11,13 @@ class Flight:
         self.cost = cost
 
     def __repr__(self):
-        s = self.date
-        s += " " + self.date
-        s += " " + self.time
-        s += " " + self.start
-        s += " " + self.end
-        s += " " + self.duration
-        s += " " + self.airline
-        s += " " + self.cost
+        s = "date:"+self.date
+        s += " time:" + self.time
+        s += " start:" + self.start
+        s += " end:" + self.end
+        s += " dur:" + self.duration
+        s += " airline:" + self.airline
+        s += " cost:" + self.cost
         return s
 
 class Trip:
@@ -101,7 +100,16 @@ class Query:
         self.pref2 = pref2
         self.pref3 = pref3
         self.numFlights = numFlights
-
+    def __repr__(self):
+        res = "date:"+self.date
+        res += " time:"+self.time
+        res += " start:"+self.start
+        res += " end:"+self.end
+        res += " pref1:"+str(self.pref1)
+        res += " pref2:"+str(self.pref2)
+        res += " pref3:"+str(self.pref3)
+        res += " numFlights:"+str(self.numFlights)
+        return res
 
 
 COST_PREF = 0

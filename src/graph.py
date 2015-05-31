@@ -49,7 +49,7 @@ def makeGraph(filename):
     returns a list of cities (each containing a list of flights)"""
     f = open(filename, 'r')
     cities = []
-    for flight in f.read().replace("\n","").replace("]","").strip().split("["):
+    for flight in f.read().replace("\n","").replace("]","").replace(" ","").strip().split("["):
         if flight != "":
 
             parts = flight.split(',')
