@@ -1,0 +1,5 @@
+[ 29/02/2000, 8:30, Brisbane, Adelaide, (Time, Cost, None), 3]
+[ 29/02/2000, 8:30, Brisbane, Adelaide, (Cost, Time, Qantas), 3]
+[ 29/02/2000, 8:30, Brisbane, Adelaide, (Virgin, Time, Cost), 3]
+[ 29/02/2000, 8:30, Brisbane, Adelaide, (Qantas, Cost, Time), 3]
+[ 29/02/2000, 8:30, Brisbane, Adelaide, (Jetstar, Cost, Time), 1]
