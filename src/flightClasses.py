@@ -10,6 +10,16 @@ class Flight:
         self.airline = airline
         self.cost = cost
 
+    def __repr__(self):
+        s = self.date
+        s += " " + self.date
+        s += " " + self.time
+        s += " " + self.start
+        s += " " + self.end
+        s += " " + self.duration
+        s += " " + self.airline
+        s += " " + self.cost
+        return s
 
 class Trip:
     def __init__(self,date,time,start,end,currCal,cost,ffPoint,airlinePref):
@@ -72,6 +82,17 @@ class Trip:
 
 class Query:
     def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
+        """Create a query class
+        date = num/num/num
+        time = num:num
+        start = origin city
+        end = dest city
+        pref1 = [0-2]
+        pref2 = [0-2]
+        pref3 = [0-2]
+        numFlights = int of the number of flights to be returned"""
+
+
         self.date = date
         self.time = time
         self.start = start
