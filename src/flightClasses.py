@@ -15,22 +15,32 @@ class Flight:
         s += " time:" + self.time
         s += " start:" + self.start
         s += " end:" + self.end
-        s += " dur:" + self.duration
+        s += " dur:" + str(self.duration)
         s += " airline:" + self.airline
-        s += " cost:" + self.cost
+        s += " cost:" + str(self.cost)
         return s
 
 class Trip:
     def __init__(self,date,time,start,end,currCal,cost,ffPoint,airlinePref):
-        self.startCal = convertTime(date,time)
+        self.startCal = self.convertTime(date,time)
         self.start = start
         self.current = start
         self.end = end
-        self.currCal = startCal
+        self.currCal = self.startCal
         self.cost = cost
         self.ffPoint = ffPoint
         self.airlinePref = airlinePref
         self.listFlights = []
+
+    def __repr__(self):
+        x = str(self.startCal)
+        x += " start:" + self.start
+        x += " end:" + self.end
+        x += " cost:" + str(self.cost)
+        for f in self.listFlights:
+            x += "\n   flight:" + str(f)
+
+        return x
 
     def appendFlight(self,newFlight):
         """ This adds the flight 'newFlight' onto the end of the list of flights in 'listFlights'
@@ -40,8 +50,8 @@ class Trip:
 
         """
         self.current = newFlight.end
-        self.currCal = convertTime(newFlight.date, newFlight.time)
-        self.currCal = addDuration(self.currCal,newFlight)
+        self.currCal = self.convertTime(newFlight.date, newFlight.time)
+        self.currCal = self.addDuration(self.currCal,newFlight)
         self.cost += newFlight.cost
         if self.airlinePref == newFlight.airline:
             self.ffPoint += newFlight.getFFPoints()
@@ -56,7 +66,7 @@ class Trip:
         DateTime: endDate
         """
         #increment by the duration of the flight in minutes
-        endDate = startDate + datetime.timedelta(minutes = flight.duration)
+        endDate = startDate + datetime.timedelta(minutes = int(flight.duration))
         return endDate
 
     def convertTime(self,date,time):
@@ -69,14 +79,14 @@ class Trip:
         """
         #Creates a datetime from the paramatised date and time
         #Create time object
-        timeSplit = time.split(':')
+        timeSplit = [int(i) for i in time.split(':')]
         timeObj = datetime.time(timeSplit[0], timeSplit[1]); #hours, minutes
         #Create date object
         currDate = date
-        dateSplit = currDate.split('/')
+        dateSplit = [int(i) for i in currDate.split('/')]
         dateObj = datetime.date(dateSplit[2], dateSplit[0], dateSplit[1]) #year, day, month
         #combine into datetime object
-        dateTime = datetime.datetime.combine(currDateObj, currTimeObj)
+        dateTime = datetime.datetime.combine(dateObj, timeObj)
         return dateTime
 
 class Query:
@@ -112,7 +122,7 @@ class Query:
         return res
 
 
-COST_PREF = 0
-TIME_PREF = 1
-POINT_PREF = 2
+COST_PREF = "cost"
+TIME_PREF = "time"
+POINT_PREF = "ffPoint"
 # As a data structure for the results, since we can store flightplans as a list of flights, we'll be using an array of flightPlans (ordred by preference)
