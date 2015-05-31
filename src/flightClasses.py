@@ -1,6 +1,9 @@
 import datetime
 
 class Flight:
+    '''
+    creates a flight class with the date, time, start city, end city, duration, airline and cost as paramaterised.
+    '''
     def __init__(self, date, time, start, end, duration, airline, cost):
         self.date = date
         self.time = time
@@ -13,6 +16,15 @@ class Flight:
 
 class Trip:
     def __init__(self,date,time,start,end,currCal,cost,ffPoint,airlinePref):
+        '''date+time as dateTime >> startCal+currCal
+        start (city object) >> start, current
+        end (city goal object) >> end
+        currCal, cost and ffPoint aren't used for initilisation - should all be zeroed
+        airlinePref >> airlinePref
+        Empty list of flights the trip has taken called 'listFlights'
+        '''
+        
+        
         self.startCal = convertTime(date,time)
         self.start = start
         self.current = start
@@ -71,6 +83,11 @@ class Trip:
         return dateTime
 
 class Query:
+    '''
+    date as int/int/int, time as int:int
+    start and end cities, pref1, pref2 and pref3 as integers representing preferences of cost, time and ffpoints
+    numFlights as integer
+    '''
     def __init__(self,date,time,start,end,pref1,pref2,pref3,numFlights):
         self.date = date
         self.time = time
