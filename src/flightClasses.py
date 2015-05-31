@@ -15,9 +15,9 @@ class Flight:
         s += " time:" + self.time
         s += " start:" + self.start
         s += " end:" + self.end
-        s += " dur:" + self.duration
+        s += " dur:" + str(self.duration)
         s += " airline:" + self.airline
-        s += " cost:" + self.cost
+        s += " cost:" + str(self.cost)
         return s
 
 class Trip:
@@ -31,6 +31,16 @@ class Trip:
         self.ffPoint = ffPoint
         self.airlinePref = airlinePref
         self.listFlights = []
+
+    def __repr__(self):
+        x = str(self.startCal)
+        x += " start:" + self.start
+        x += " end:" + self.end
+        x += " cost:" + str(self.cost)
+        for f in self.listFlights:
+            x += "\n   flight:" + str(f)
+
+        return x
 
     def appendFlight(self,newFlight):
         """ This adds the flight 'newFlight' onto the end of the list of flights in 'listFlights'
@@ -56,7 +66,7 @@ class Trip:
         DateTime: endDate
         """
         #increment by the duration of the flight in minutes
-        endDate = startDate + datetime.timedelta(minutes = flight.duration)
+        endDate = startDate + datetime.timedelta(minutes = int(flight.duration))
         return endDate
 
     def convertTime(self,date,time):

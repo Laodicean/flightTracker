@@ -19,5 +19,6 @@ q = flightClasses.Query(
         2)
 print(q)
 
-x = algorithm.getFlightSolutions(q,graph)
-print(x)
+x = algorithm.getFlightSolutions(q,g)
+for t in x:
+    print(t)

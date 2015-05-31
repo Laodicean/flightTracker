@@ -2,59 +2,58 @@
 import flightClasses
 from operator import itemgetter
 from queue import Queue #no module named queue?
-
-def getFlightSolutions(query,graph):
+from copy import deepcopy
+def getFlightSolutions(query,g):
     """Retrieves a list of Trips containing soultions to the given query
     query: query object containing parameters for the search
     graph: Graph of cities
     """
-    flightList = searchFlights(query,graph)
+    flightList = searchFlights(query,g)
     flightList = sortFlights(flightList,query)
     return flightList
 
-def searchFlights(query,graph):
-    q = Queue()
-    visited = Queue()
-    openQueue = q
-    closedQueue = visited
+def searchFlights(query,g):
+    openQueue = Queue()
+    closedSet = set()
     solutions = []
     solCounter = 0
     firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,0,0,0,"")
     openQueue.put(firstTrip)
-    while( not openQueue.empty() & solCounter < query.numFlights):
+    while( not openQueue.empty() and solCounter < query.numFlights):
         currTrip = openQueue.get()
+        if currTrip in closedSet:
+            continue
         if (currTrip.current == currTrip.end):
             solutions.append(currTrip)
             solCounter += 1
         else:
             appendList = []
-            appendList = graph.getFlights(currTrip)
+            appendList = g.getFlights(currTrip)
             for currFlight in appendList:
-                newTrip = currTrip.clone()
+                newTrip = deepcopy(currTrip)
                 newTrip.appendFlight(currFlight)
-                if (currTrip not in closedQueue & currTrip not in openQueue):
-                    openQueue.put(newTrip)
+                openQueue.put(newTrip)
 
-        closedQueue.put(currTrip)
+        closedSet.add(currTrip)
     return solutions
 
 
 def sortFlights(flightList,query):
     if query.pref1 == "cost":
         if query.pref2 == "time":
-            return sorted(flightList, key=lambda f:(f.cost, f.curCal - f.startCal, f.ffPoint))
+            return sorted(flightList, key=lambda f:(f.cost, f.currCal - f.startCal, f.ffPoint))
         else:#ffPoint
-            return sorted(flightList, key=lambda f:(f.cost, f.ffPoint, f.curCal - f.startCal))
+            return sorted(flightList, key=lambda f:(f.cost, f.ffPoint, f.currCal - f.startCal))
     elif query.pref1 == "time":
         if query.pref2 == "cost":
-            return sorted(flightList, key=lambda f:(f.curCal - f.startCal, f.cost, f.ffPoint))
+            return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.cost, f.ffPoint))
         else: #ffPoint
-            return sorted(flightList, key=lambda f:(f.curCal - f.startCal, f.ffPoint, f.cost))
+            return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.ffPoint, f.cost))
     else: #ffPoint
         if query.pref2 == "cost":
-            return sorted(flightList, key=lambda f:(f.ffPoint, f.cost, f.curCal - f.startCal))
+            return sorted(flightList, key=lambda f:(f.ffPoint, f.cost, f.currCal - f.startCal))
         else: #time
-            return sorted(flightList, key=lambda f:(f.ffPoint, f.curCal - f.startCal, f.cost))
+            return sorted(flightList, key=lambda f:(f.ffPoint, f.currCal - f.startCal, f.cost))
 
 
 
