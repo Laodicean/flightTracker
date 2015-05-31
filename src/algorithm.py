@@ -7,11 +7,11 @@ def getFlightSolutions(query,graph):
     query: query object containing parameters for the search
     graph: Graph of cities
     """
-    flightList[query.numFlights] = searchFlights(query,cities)
+    flightList[query.numFlights] = searchFlights(query,graph)
     flightList = sortFlights(flightList,query)
     return flightList
 
-def searchFlights(query,cities):
+def searchFlights(query,graph):
     q = Queue.Queue()
     visited = Queue.Queue()
     openQueue = q
@@ -63,13 +63,13 @@ def sortFlight(flightList,query):
         passes += 1
 
 def compare(one,two,comparator):
-    if (comparator == POINT_PREF):
+    if (comparator == flightClasses.POINT_PREF):
         if (one.ffPoint > two.ffPoint):
             return 1
         elif (one.ffPoint == two.ffPoint):
             return -1
     else:
-        if(comparator == TIME_PREF):
+        if(comparator == flightClasses.TIME_PREF):
             if(one.duration < two.duration):
                 return 1
             elif(one.duration == two.duration):
