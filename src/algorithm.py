@@ -1,8 +1,6 @@
-COST_PREF = 0
-TIME_PREF = 0
-POINT_PREF = 0
+#!/usr/bin/python3
 import flightClasses
-import Queue
+#import Queue #no module named queue?
 
 def getFlightSolutions(query,graph):
     """Retrieves a list of Trips containing soultions to the given query
