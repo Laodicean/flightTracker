@@ -1,0 +1,7 @@
+[1/1/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+[2/1/2001,9:00,Sydney,Canberra,180,Qantas,50]
+[2/1/2001,14:00,Canberra,Adelaide,240,Jetstar,20]
+[2/1/2001,12:00,Canberra,Melbourne,160,Jetstar,20]
+[2/1/2001,16:00,Melbourne,Adelaide,60,Jetstar,160]
+[2/1/2001,14:00,Canberra,Sydney,240,Jetstar,20]
+[3/1/2001,5:00,Brisbane,Adelaide,1000,Virgin,800]

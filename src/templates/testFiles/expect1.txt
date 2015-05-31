@@ -1,0 +1,16 @@
+\\for Brisbane -> Adelaide
+\\for least travel time the flight options should be
+BSCMA 760
+BSCA 780
+BA 1000
+\\for minimal cost the flight options should be
+BSCA 170
+BSCMA 330
+BA 800
+\\for max flyer points for Virgin
+BA 
+\\for max flyer points for Qantas
+BSCMA = BSCA (so sort on other preferences)
+\\for max flyer points Jetstar
+BSCMA
+BSCA
