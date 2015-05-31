@@ -54,11 +54,13 @@ def makeGraph(filename):
 
             #Checking if we already have the city
             foundCity = getIndex(cities, parts[2])
+            foundDest = getIndex(cities, parts[3])
             #if the city did not already exist
             if foundCity == 'no':
                 cities.append(City(parts[2]))
                 foundCity = -1
-                print cities[foundCity].name
+            if foundDest == 'no':
+                cities.append(City(parts[3]))
 
             myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
             cities[foundCity].flights.append(myFlight)
