@@ -3,6 +3,8 @@ import algorithm
 import flightClasses
         
 class City():
+    """ the 'name' paramater is a string containing the namee of the city
+    The returned city has the name passed in and an empty array of flights 'flights'
     def __init__(self, name):
         self.name = name
         self.flights = []
