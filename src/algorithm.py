@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import time, datetime
 import flightClasses
 #import Queue #no module named queue?
 
@@ -23,6 +24,8 @@ def searchFlights(query,graph):
     while( not openeQueue.empty() & solCounter < query.numFlights):
         currTrip = openeQueue.get()
         if (currTrip.current == currTrip.end):
+            #currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
+            currTrip.currCal = int(time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple())/60) #currCal may or may not be the right place to put this
             solutions.append(currTrip)
             solCounter += 1
         else:
