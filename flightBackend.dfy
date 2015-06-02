@@ -1,11 +1,11 @@
-datatype preferences = time | cost | flyerPoints
+datatype preferences = Time | Cost | ffPoint
 
 
 class Query {
 	var minutes: int
 	var start: City;
 	var end: City;
-    var airlinePref: preferences;
+    var airlinePref: string;
 	var pref1: preferences;
 	var pref2: preferences;
 	var pref3: preferences;
@@ -14,8 +14,8 @@ class Query {
 
 class Flight {
 	var minutes: int
-	var start: string;
-	var end: string;
+	var start: City;
+	var end: City;
 	var duration: int;
 	var airline: string;
 	var cost: int;
@@ -34,10 +34,19 @@ class Trip {
 	var currCal: int;
 	var cost: int;
 	var ffPoint: int;
-	var airlinePref: preferences;
+	var airlinePref: string;
 	var listFlights: seq<Flight>;
 
-    constructor init(minutes: int, start: City, end: City, airlinePref: preferences)
+    constructor init(minutes: int, start: City, end: City, airlinePref: string)
+        ensures this.startCal == minutes;
+        ensures this.start == start;
+        ensures this.current == start;
+        ensures this.end == end;
+        ensures this.currCal == this.startCal;
+        ensures this.cost == 0;
+        ensures this.ffPoint == 0;
+        ensures this.airlinePref == airlinePref;
+        ensures this.listFlights == [];
         modifies this;
     {
         this.startCal := minutes;
@@ -49,21 +58,35 @@ class Trip {
         this.ffPoint := 0;
         this.airlinePref := airlinePref;
         this.listFlights := [];
-    }	
+    }
+
+    method appendFlight(newFlight: Flight)
+        requires newFlight != null;
+        modifies this;
+    {
+        this.current := newFlight.end;
+        this.currCal := newFlight.minutes;
+        this.currCal := this.addDuration(this.currCal, newFlight);
+        this.cost := this.cost + newFlight.cost;
+        if this.airlinePref == newFlight.airline
+        {
+            this.ffPoint := this.ffPoint + newFlight.duration;
+        }
+        this.listFlights := this.listFlights + [newFlight];
+    }
+
+    method addDuration(startDate: int, flight: Flight) returns (endDate: int)
+        requires flight != null;
+    {
+        endDate := startDate + flight.duration;
+    }
 }
 
 class Graph {
 	var cities: seq<City>;
 
-	constructor init()
-	modifies this;
-	ensures cities == [];
-	{
-		cities := [];
-	}
-
 	method getFlights(x: Trip) returns (y: seq<Flight>)
-
+        ensures forall f: Flight | f in y :: f != null;
 		{
 		
 			var potFlights : seq<Flight>;
@@ -164,6 +187,7 @@ predicate correctGraph (x: Graph)
 	
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires query != null;
+    requires g != null;
 //	requires correctQuery(query);
 //    requires correctGraph(g);
 
@@ -178,7 +202,8 @@ method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>
 
 
 method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
-
+    requires query != null;
+    requires g != null;
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
@@ -205,8 +230,8 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
                 {
                     var currFlight := appendList[i];
                     
-                    var newTrip := deepcopy(currTrip); //TODO: write this
-                    newTrip.appendFlight(currFlight); //TODO: write this
+                    var newTrip := deepcopy(currTrip);
+                    newTrip.appendFlight(currFlight);
                     openQueue.put(newTrip);
 
                     i := i + 1;
@@ -218,7 +243,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
 }
 
 
- method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
+method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
 	requires query != null;
 	requires flightList != [] && |flightList| > 0;
 
@@ -243,6 +268,11 @@ method deepcopy(oldT: Trip) returns (newT: Trip)
 	ensures newT.listFlights == oldT.listFlights;
 {
     newT := new Trip.init(oldT.startCal, oldT.start, oldT.end, oldT.airlinePref);
+    newT.current := oldT.current;
+    newT.currCal := oldT.currCal;
+    newT.cost := oldT.cost;
+    newT.ffPoint := oldT.ffPoint;
+    newT.listFlights := oldT.listFlights;
 }
 
 
