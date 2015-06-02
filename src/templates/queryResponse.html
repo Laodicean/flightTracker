@@ -1,11 +1,3 @@
-<div>
-    <br>
-    <table>
-        {% for v in var %}
-        <tr><td> {{ v }}</td></tr>
-        {% end %}
-    </table>
-</div>
 <div class="row">
 <div class="col-md-3 col-md-offset-1">
 <h3>Flights Found</h3>
@@ -27,6 +19,11 @@
 				<th>Frequent Flyer Points</th>
 			</tr>
 			</thead>
+			{% for t in trips %}
+			<tr>
+				<td>{{t}}</td>
+			</tr>
+			{% end %}
 		</table>
 	</div>
 	</div>
