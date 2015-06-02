@@ -111,14 +111,14 @@ class Query:
         self.pref3 = pref3
         self.numFlights = numFlights
     def __repr__(self):
-        res = "date:"+self.date
-        res += " time:"+self.time
-        res += " start:"+self.start
-        res += " end:"+self.end
-        res += " pref1:"+str(self.pref1)
-        res += " pref2:"+str(self.pref2)
-        res += " pref3:"+str(self.pref3)
-        res += " numFlights:"+str(self.numFlights)
+        res = +self.date
+        res += ", "+self.time
+        res += ", "+self.start
+        res += ", "+self.end
+        res += ", ("+str(self.pref1)
+        res += ", "+str(self.pref2)
+        res += ", "+str(self.pref3)
+        res += "), "+str(self.numFlights)
         return res
 
 
