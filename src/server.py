@@ -3,6 +3,7 @@
 #Tornado server file. Should not need to modify much.
 
 import tornado
+import os
 import pages
 
 PORT = 8080
@@ -12,7 +13,7 @@ application = tornado.web.Application([
     (r"/", pages.LandingHandler),
     (r"/landing", pages.LandingHandler),
     (r"/query", pages.QueryHandler),
-    (r"/static/(.*)", tornado.web.StaticFileHandler, {'path': static_path})
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), "static")})
     ], debug=True
     )
 
