@@ -39,5 +39,5 @@ class QueryHandler(tornado.web.RequestHandler):
 
 
         self.write(loader.load("queryResponse.html").generate(
-            var = algorithm.getFlightSolutions(q,g)
+            trips = algorithm.getFlightSolutions(q,g)
             ))
