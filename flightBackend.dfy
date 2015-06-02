@@ -4,7 +4,21 @@ datatype preferences = time | cost | flyerPoints
 class Date {
 	var day: int;
 	var month: int;
-
+/*
+	constructor init()
+	modifies this;
+	
+	{
+	correctDate(this)
+	}
+	*/
+	/*predicate correctDate(x:Date)
+	reads x;
+		requires x != null 
+		{ x.day >= 0 && x.day <= 31 &&
+		  x.month > 0 && x.month <= 12
+		}
+		*/
 }
 
 class Time {
@@ -38,14 +52,15 @@ class Flight {
 
 class City {
 	var name : string;
-	var flights : array<Flight>;
-	
+	var flights : seq<Flight>;
+	/*
 	constructor init()
 	modifies this;
 	ensures flights != null;
 	{
 		flights := new array<Flight>;
 	}
+	*/
 }
 
 class Trip {
@@ -56,7 +71,7 @@ class Trip {
 	var cost: int;
 	var ffPoint: int;
 	var airLinePref: preferences;
-	var listFlights: array<Flight>;
+	var listFlights: seq<Flight>;
 
     constructor init()
     {
@@ -65,9 +80,25 @@ class Trip {
 }
 
 class Graph {
-	var cities: array<City>;
-}
+	var cities: seq<City>;
 
+	constructor init()
+	modifies this;
+	ensures cities == [];
+	{
+		cities := [];
+	}
+
+	method getFlights()
+
+		{
+		var potFlights : seq<Flight>;
+		var currentCity : City;
+		}
+	
+
+}
+/*
 predicate correctPref(c:preferences) 
 	ensures c in {time, cost, flyerPoints} ;
 
@@ -122,23 +153,28 @@ predicate correctCity (x: City, y : Graph)
 
 predicate correctTrip (x: Trip)
     reads x;
-
+	*/
 predicate correctGraph (x: Graph)
     reads x;
 
-
-method getFlightSolutions(query: Query, g: Graph) returns (flightList: array<Trip>)
+	
+method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires query != null;
-	requires correctQuery(query);
-    requires correctGraph(g);
+//	requires correctQuery(query);
+//    requires correctGraph(g);
+
     //ensures that flightList matches the spec!
 {
+
     flightList := searchFlights(query, g);
+//	ghost var oldFlightList
+	assume flightList != [];
     flightList := sortFlights(flightList, query);
 }
 
 
-method searchFlights(query: Query, g: Graph) returns (solutions: array<Trip>)
+method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
+
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
@@ -147,12 +183,17 @@ method searchFlights(query: Query, g: Graph) returns (solutions: array<Trip>)
 }
 
 
-function method sortFlights(flightList: array<Trip>, query: Query): array<Trip>
-	/*requires query != null;
-	requires query.date != null;
-	requires query.time != null;
-	requires correctQuery(query);
-    reads query;*/
+ method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
+	requires query != null;
+	requires flightList != [] && |flightList| > 0;
+//	ensures a sorted list
+// for i j, if i > j ==> seq[i] > seq[j]
+
+	{
+	
+	}
+
+	
 
 
 // Generic queue class
