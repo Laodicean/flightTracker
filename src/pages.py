@@ -16,6 +16,7 @@ class LandingHandler(tornado.web.RequestHandler):
         loader = tornado.template.Loader("templates/")
         self.write(loader.load("landing.html").generate(
             cities=g.getCityNames(),
+            airlines= g.getAirlines() + ["None"]
             ))
 
 
@@ -26,15 +27,16 @@ class QueryHandler(tornado.web.RequestHandler):
 
         date = self.get_argument("tDate")
         date = '/'.join(reversed(date.split('-')))
-
+        prefs = self.get_argument("prefs").split(',')
+        prefs[prefs.index("ffp")] = self.get_argument("ffpAirline")
         q = flightClasses.Query(
                 date,
                 self.get_argument("depTime"),
                 self.get_argument("origCity"),
                 self.get_argument("desCity"),
-                "Cost",
-                "Time",
-                "None",
+                prefs[0],
+                prefs[1],
+                prefs[2],
                 int(self.get_argument("number")))
 
 

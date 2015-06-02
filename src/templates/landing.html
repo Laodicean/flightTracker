@@ -2,7 +2,15 @@
 <head>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script>
+      $(function() {
+        $( "#sortable" ).sortable();
+        $( "#sortable" ).disableSelection();
+      });
+    </script>
 </head>
 <body>
 <div id="query-wrapper">
@@ -47,22 +55,23 @@
                 </div>
             </div>
             <div class="form-group">
-                How important are each of these to you? (3 being the most important) 
+                How important are each of these to you? Please rank your preferences below: 
                 <div class="row">
-                    <div class="col-md-4">
-                        Minimal cost
-                        <input class="form-control" type="number" name="prefCost" min="1" max="3">
-                    </div>
-                    <div class="col-md-4">
-                        Minimal time travelling
-                        <input class="form-control" type="number" name="prefTime" min="1" max="3">
-                    </div>
-                    <div class="col-md-4">
-                        Maximum Frequent Flyer Points
-                        <input class="form-control" type="number" name="prefPoints" min="1" max="3">
-                    </div>
+                    <ul id="sortable">
+                        <li id="Cost">Minimal cost</li>
+                        <li id="Time">Minimal time travelling</li>  
+                        <li id="ffp">Maximum Frequent Flyer Points</li> 
+                    </ul>
                 </div>
             </div>
+            <div class="form-group">
+                Which airline would you like to collect points for?
+                <select class="form-control" name="ffpAirline">
+                    {% for line in airlines %}
+                    <option value="{{ line }}">{{ line }}</option>
+                    {% end %}
+                </select>
+            <br>
             <div class="form-group">
                 How many offers would you like to see?
                 <input class="form-control" type="number" name="number">
@@ -85,7 +94,7 @@ function SendQuery() {
     request=new XMLHttpRequest();
 
     args=$('form').serialize(); //Get form args and set metadata for request
-
+    args += "&prefs="+$("#sortable").sortable("toArray").toString();
     request.open("GET","query?"+args,false);//Initalise request.
 
 
