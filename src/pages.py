@@ -1,6 +1,11 @@
 #Pages definition file. Page response handler classes should be defined here.
 import tornado.web
 import tornado.template
+import graph
+import flightClasses
+import algorithm
+
+g = graph.makeGraph("testFlights.txt")
 
 class LandingHandler(tornado.web.RequestHandler):
     """Class which allows users to make requests for flights
@@ -10,7 +15,7 @@ class LandingHandler(tornado.web.RequestHandler):
     def get(self):
         loader = tornado.template.Loader("templates/")
         self.write(loader.load("landing.html").generate(
-            cities=["Candy Mountain", "Atlantis", "Zion", "Gotham City", "Pallet Town"],
+            cities=g.getCityNames(),
             ))
 
 
