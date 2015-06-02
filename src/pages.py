@@ -39,7 +39,8 @@ class QueryHandler(tornado.web.RequestHandler):
                 prefs[2],
                 int(self.get_argument("number")))
 
-
-        self.write(loader.load("queryResponse.html").generate(
-            trips = algorithm.getFlightSolutions(q,g)
-            ))
+        try:
+            self.write(loader.load("queryResponse.html").generate(
+            trips = algorithm.getFlightSolutions(q,g)))
+        except:
+            self.write(loader.load("errorResponse.html").generate())
