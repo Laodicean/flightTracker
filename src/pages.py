@@ -23,12 +23,21 @@ class QueryHandler(tornado.web.RequestHandler):
     """Class which handles a request for flights"""
     def get(self):
         loader = tornado.template.Loader("templates/")
-        #setup and call search function
-        #
-        #
-        a = self.request.arguments
+
+        date = self.get_argument("tDate")
+        date = '/'.join(reversed(date.split('-')))
+
+        q = flightClasses.Query(
+                date,
+                self.get_argument("depTime"),
+                self.get_argument("origCity"),
+                self.get_argument("desCity"),
+                "Cost",
+                "Time",
+                "None",
+                int(self.get_argument("number")))
+
 
         self.write(loader.load("queryResponse.html").generate(
-            var=[i+"->"+str(a[i]) for i in a.keys()],
-            uri=self.request.uri
+            var = algorithm.getFlightSolutions(q,g)
             ))
