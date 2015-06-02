@@ -5,3 +5,25 @@
     min-height:100vh;
     padding-top:50px;
 }
+
+li {
+	list-style-type: none;
+}
+
+#sortable {
+	background-color:#f1f1f1;
+	border-color:#cccccc;
+	border-radius:5px;
+	border:1px;
+	border-style:solid;
+	padding:0px;
+}
+
+.sort {
+	background-color:white;
+	border-radius:5px;
+	border-color:#cccccc;
+	border: 1px;
+	border-style:solid;
+	margin:2px;
+}
