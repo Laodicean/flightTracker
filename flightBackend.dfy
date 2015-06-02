@@ -4,6 +4,7 @@ datatype preferences = time | cost | flyerPoints
 class Date {
 	var day: int;
 	var month: int;
+    var year: int;
 /*
 	constructor init()
 	modifies this;
@@ -100,12 +101,15 @@ class Graph {
 		cities := [];
 	}
 
-	method getFlights()
+	method getFlights(x: Trip) returns (y: seq<Flight>)
 
 		{
 		var potFlights : seq<Flight>;
-		var currentCity : City;
+		var currentCity : int;
+		currentCity := this.getIndex(cities, currentCities);
 		}
+
+	method get
 	
 
 }
@@ -190,18 +194,19 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
     solutions := [];
-    var solCounter := 0;
     var firstTrip := new Trip.init(query.date, query.time, query.start, query.end, query.airlinePref);
     openQueue.put(firstTrip);
-    while !openQueue.empty() && solCounter < query.numFlights
+    while !openQueue.empty()
     {
         var currTrip := openQueue.get();
         if !(currTrip in closedSet)
         {
             if currTrip.current == currTrip.end
             {
+                currTrip.startCal := (currTrip.listFlights[0].date, currTrip.listFlights[0].time);
+                currTrip.currCal := compare(currTrip.currCal, currTrip.startCal); //TODO: write this
+                currTrip.ffPoint := currTrip.ffPoint / 60; // assuming that Dafny truncates the result like Java/C
                 solutions := solutions + [currTrip];
-                solCounter := solCounter + 1;
             } else {
                 var appendList := [];
                 appendList := g.getFlights(currTrip); //TODO: write this
@@ -227,14 +232,34 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
  method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
 	requires query != null;
 	requires flightList != [] && |flightList| > 0;
+
 //	ensures a sorted list
 // for i j, if i > j ==> seq[i] > seq[j]
 
 	{
-	
 	}
 
-	
+method deepcopy(oldT: Trip) returns (newT: Trip)
+    requires oldT != null;
+    ensures newT != null;
+    ensures newT != oldT;
+    ensures newT.startCal == oldT.startCal;
+	ensures newT.start == oldT.start;
+	ensures newT.current == oldT.current;
+	ensures newT.end == oldT.end;
+	ensures newT.currCal == oldT.currCal;
+	ensures newT.cost == oldT.cost;
+	ensures newT.ffPoint == oldT.ffPoint;
+	ensures newT.airlinePref == oldT.airlinePref;
+	ensures newT.listFlights == oldT.listFlights;
+{
+    newT := new Trip.init(oldT.startCal.0, oldT.startCal.1, oldT.start, oldT.end, oldT.airlinePref);
+}
+
+method compare(cal1: (Date, Time), cal2: (Date, Time)) returns (difference: int)
+{
+
+}
 
 
 // Generic queue class
