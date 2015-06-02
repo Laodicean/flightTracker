@@ -15,22 +15,23 @@ class Time {
 class Query {
 	var date: Date;
 	var time: Time;
-	var Start: string;
-	var Dest: string;
+	var start: string;
+	var end: string;
+    var airlinePref: preferences;
 	var pref1: preferences;
 	var pref2: preferences;
 	var pref3: preferences;
-	var numFlight: int;
+	var numFlights: int;
 
 	constructor init() 
-		
+
 }
 
 class Flight {
 	var date: Date;
 	var time: Time;
-	var Start: string;
-	var Dest: string;
+	var start: string;
+	var end: string;
 	var duration: int;
 	var airline: string;
 	var cost: int;
@@ -38,34 +39,44 @@ class Flight {
 
 class City {
 	var name : string;
-	var flights : array<Flight>;
+	var flights : seq<Flight>;
 	
 	constructor init()
 	modifies this;
 	ensures flights != null;
 	{
-		flights := new array<Flight>;
+		flights := new seq<Flight>;
 	}
 }
 
 class Trip {
+    var startCal: (Date, Time);
 	var start: string;
 	var current: string;
 	var end: string;
-	//carrCal??
+	var currCal: (Date, Time);
 	var cost: int;
 	var ffPoint: int;
-	var airLinePref: preferences;
-	var listFlights: array<Flight>;
+	var airlinePref: preferences;
+	var listFlights: seq<Flight>;
 
-    constructor init()
+    constructor init(date: Date, time: Time, start: string, end: string, airlinePref: preferences)
+        modifies this;
     {
-        
+        this.startCal := (date, time);
+        this.start := start;
+        this.current := start;
+        this.end := end;
+        this.currCal := startCal;
+        this.cost := 0;
+        this.ffPoint := 0;
+        this.airlinePref := airlinePref;
+        this.listFlights := [];
     }
 }
 
 class Graph {
-	var cities: array<City>;
+	var cities: seq<City>;
 }
 
 predicate correctPref(c:preferences) 
@@ -95,8 +106,8 @@ predicate correctQuery (x: Query)
 		ensures correctTime(x.time);
 		ensures correctDate(x.date);
 		ensures correctPref(x.pref1) && correctPref(x.pref2) && correctPref(x.pref3)
-		//need to ensure start and dest are in the graph class...
-		ensures x.numFlight > 0;
+		//need to ensure start and end are in the graph class...
+		ensures x.numFlights > 0;
 		//second thoughts...we're not parsing the data here... so we need to have correct datas ...
 		//might need to ensure everything else is not null or valid
 
@@ -127,7 +138,7 @@ predicate correctGraph (x: Graph)
     reads x;
 
 
-method getFlightSolutions(query: Query, g: Graph) returns (flightList: array<Trip>)
+method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires query != null;
 	requires correctQuery(query);
     requires correctGraph(g);
@@ -138,16 +149,47 @@ method getFlightSolutions(query: Query, g: Graph) returns (flightList: array<Tri
 }
 
 
-method searchFlights(query: Query, g: Graph) returns (solutions: array<Trip>)
+method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
+    requires query != null;
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
+    solutions := [];
     var solCounter := 0;
-    var firstTrip := new Trip.init();
+    var firstTrip := new Trip.init(query.date, query.time, query.start, query.end, query.airlinePref);
+    openQueue.put(firstTrip);
+    while !openQueue.empty() && solCounter < query.numFlights
+    {
+        var currTrip := openQueue.get();
+        if !(currTrip in closedSet)
+        {
+            if currTrip.current == currTrip.end
+            {
+                solutions := solutions + [currTrip];
+                solCounter := solCounter + 1;
+            } else {
+                var appendList := [];
+                appendList := g.getFlights(currTrip); //TODO: write this
+
+                var i := 0;
+                while i < |appendList|
+                {
+                    var currFlight := appendList[i];
+                    
+                    var newTrip := deepcopy(currTrip); //TODO: write this
+                    newTrip.appendFlight(currFlight); //TODO: write this
+                    openQueue.put(newTrip);
+
+                    i := i + 1;
+                }
+            }
+            closedSet := closedSet + {currTrip};
+        }
+    }
 }
 
 
-function method sortFlights(flightList: array<Trip>, query: Query): array<Trip>
+function method sortFlights(flightList: seq<Trip>, query: Query): seq<Trip>
 	/*requires query != null;
 	requires query.date != null;
 	requires query.time != null;
