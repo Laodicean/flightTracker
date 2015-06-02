@@ -48,6 +48,10 @@ class Trip {
 	var airLinePref: preferences;
 	var listFlights: array<Flight>;
 
+    constructor init()
+    {
+        
+    }
 }
 
 class Graph {
@@ -101,51 +105,65 @@ predicate correctGraph (x: Graph)
     reads x;
 
 
-method getFlightSolutions(query: Query, graph: Graph) returns (flightList: array<Trip>)
+method getFlightSolutions(query: Query, g: Graph) returns (flightList: array<Trip>)
 	requires query != null;
 	requires correctQuery(query);
-	{
-
-	}
-	//need to do something about the graph
-
-
-method searchFlights(query: Query, graph: Graph) returns (solutions: array<Trip>)
-
+    requires correctGraph(g);
+    //ensures that flightList matches the spec!
+{
+    flightList := searchFlights(query, g);
+    flightList := sortFlights(flightList, query);
+}
 
 
-method sortFlights(flightList: array<Trip>, query: Query)
-	requires query != null;
+method searchFlights(query: Query, g: Graph) returns (solutions: array<Trip>)
+{
+    var openQueue := new Queue<Trip>.init();
+    var closedSet: set<Trip>;
+    var solCounter := 0;
+    var firstTrip := new Trip.init();
+}
+
+
+function method sortFlights(flightList: array<Trip>, query: Query): array<Trip>
+	/*requires query != null;
 	requires query.date != null;
 	requires query.time != null;
 	requires correctQuery(query);
+    reads query;*/
 
 
-
-
-
-
-// Abstract queue class
+// Generic queue class
 class Queue<T> {
-    ghost var value: seq<T>;
+    var value: seq<T>;
 
     constructor init()
         ensures value == [];
         modifies this;
+    {
+        value := [];
+    }
 
     method put(x: T)
         ensures value == old(value) + [x];
         modifies this;
+    {
+        value := value + [x];
+    }
 	
     method get() returns (r: T)
         requires value != [];
         ensures r == old(value[0]);
         ensures value == old(value[1..]);
         modifies this;
+    {
+        r := value[0];
+        value := value[1..];
+    }
 
-    method empty() returns (r: bool)
-        ensures r <==> value == [];
-
-    method contains(x: T) returns (r: bool)
-        ensures r <==> x in value;
+    function method empty(): bool
+        reads this;
+    {
+        value == []
+    }
 }
