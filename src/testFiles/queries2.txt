@@ -1,0 +1,4 @@
+[1/1/2000,00:00,Mars,Venus,(Time,Cost,Virgin),2]
+[1/1/2000,00:00,Mars,Venus,(Time,Cost,SpaceX),2]
+[1/1/2000,00:00,Mars,Mars,(Time,Cost,Virgin),2]
+[1/1/2000,00:00,Venus,Pluto,(Liberty,Cost,Time),2]

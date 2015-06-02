@@ -1,0 +1,50 @@
+( [ 29/02/2000, 8:30, Brisbane, Adelaide, (Time, Cost, None), 3],
+[ (([03/01/2001,05:00,Brisbane,Adelaide,1000,Virgin,800]),800,1000,0)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,13:00,Canberra,Melbourne,160,Jetstar,20]
+	[02/01/2001,17:00,Melbourne,Adelaide,60,Jetstar,160]), 330,1800,0)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,14:00,Canberra,Adelaide,360,Jetstar,20]),170,1860,0)
+])
+
+([ 29/02/2000, 8:30, Brisbane, Adelaide, (Cost, Time, Qantas), 3],
+[(([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,14:00,Canberra,Adelaide,240,Jetstar,20]),170,1860,9)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,13:00,Canberra,Melbourne,160,Jetstar,20]
+	[02/01/2001,17:00,Melbourne,Adelaide,60,Jetstar,160]), 330,1800,9)
+ (([03/01/2001,05:00,Brisbane,Adelaide,1000,Virgin,800]),800,1000,0)
+])
+
+([ 29/02/2000, 8:30, Brisbane, Adelaide, (Virgin, Time, Cost), 3],
+[(([03/01/2001,05:00,Brisbane,Adelaide,1000,Virgin,800]),800,1000,16)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,13:00,Canberra,Melbourne,160,Jetstar,20]
+	[02/01/2001,17:00,Melbourne,Adelaide,60,Jetstar,160]), 330,1800,0)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,14:00,Canberra,Adelaide,240,Jetstar,20]),170,1860,0)
+])
+
+([ 29/02/2000, 8:30, Brisbane, Adelaide, (Qantas, Cost, Time), 3],
+[(([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,14:00,Canberra,Adelaide,240,Jetstar,20]),170,1860,9)
+ (([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,13:00,Canberra,Melbourne,160,Jetstar,20]
+	[02/01/2001,17:00,Melbourne,Adelaide,60,Jetstar,160]), 330,1800,9)
+ (([03/01/2001,05:00,Brisbane,Adelaide,1000,Virgin,800]),800,1000,0)
+])
+
+([ 29/02/2000, 8:30, Brisbane, Adelaide, (Jetstar, Cost, Time), 1],
+[(([01/01/2001,12:00,Brisbane,Sydney,360,Qantas,100]
+	[02/01/2001,09:00,Sydney,Canberra,180,Qantas,50]
+	[02/01/2001,13:00,Canberra,Melbourne,160,Jetstar,20]
+	[02/01/2001,17:00,Melbourne,Adelaide,60,Jetstar,160]), 330,1800,3)
+])

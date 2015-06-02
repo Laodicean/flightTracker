@@ -19,7 +19,6 @@ class Flight:
         self.cost = cost
 
     def __repr__(self):
-        s = "[ "+self.date
         s += ", " + self.time
         s += ", " + self.start
         s += ", " + self.end

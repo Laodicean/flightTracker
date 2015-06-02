@@ -21,6 +21,9 @@ class Query {
 	var pref2: preferences;
 	var pref3: preferences;
 	var numFlight: int;
+
+	constructor init() 
+		
 }
 
 class Flight {
@@ -36,6 +39,13 @@ class Flight {
 class City {
 	var name : string;
 	var flights : array<Flight>;
+	
+	constructor init()
+	modifies this;
+	ensures flights != null;
+	{
+		flights := new array<Flight>;
+	}
 }
 
 class Trip {
@@ -48,6 +58,10 @@ class Trip {
 	var airLinePref: preferences;
 	var listFlights: array<Flight>;
 
+    constructor init()
+    {
+        
+    }
 }
 
 class Graph {
@@ -88,11 +102,23 @@ predicate correctQuery (x: Query)
 
 //need to make pre-post for following, ensuring that data collected from these are correct
 //just so we can use it for later onwards, unless we don't have too?
-predicate correctFlight (x: Flight)
+predicate correctFlight (x: Flight, y: Graph)
 	reads x;
+	reads y;
+		requires x != null;
+		requires y != null;
+		requires correctGraph(y);
+		ensures correctTime(x.time);
+		ensures correctDate(x.date);
+		ensures exists u : City :: (u != null && u in y.cities && u.name == x.start);
+		ensures exists u : City :: (u != null && u in y.cities && u.name == x.dest);
 
-predicate correctCity (x: City)
+predicate correctCity (x: City, y : Graph)
 	reads x;
+	reads y;
+		requires x != null;
+		requires y != null;
+		requires correctGraph(y);
 
 predicate correctTrip (x: Trip)
     reads x;
@@ -101,51 +127,65 @@ predicate correctGraph (x: Graph)
     reads x;
 
 
-method getFlightSolutions(query: Query, graph: Graph) returns (flightList: array<Trip>)
+method getFlightSolutions(query: Query, g: Graph) returns (flightList: array<Trip>)
 	requires query != null;
 	requires correctQuery(query);
-	{
-
-	}
-	//need to do something about the graph
-
-
-method searchFlights(query: Query, graph: Graph) returns (solutions: array<Trip>)
-
+    requires correctGraph(g);
+    //ensures that flightList matches the spec!
+{
+    flightList := searchFlights(query, g);
+    flightList := sortFlights(flightList, query);
+}
 
 
-method sortFlights(flightList: array<Trip>, query: Query)
-	requires query != null;
+method searchFlights(query: Query, g: Graph) returns (solutions: array<Trip>)
+{
+    var openQueue := new Queue<Trip>.init();
+    var closedSet: set<Trip>;
+    var solCounter := 0;
+    var firstTrip := new Trip.init();
+}
+
+
+function method sortFlights(flightList: array<Trip>, query: Query): array<Trip>
+	/*requires query != null;
 	requires query.date != null;
 	requires query.time != null;
 	requires correctQuery(query);
+    reads query;*/
 
 
-
-
-
-
-// Abstract queue class
+// Generic queue class
 class Queue<T> {
-    ghost var value: seq<T>;
+    var value: seq<T>;
 
     constructor init()
         ensures value == [];
         modifies this;
+    {
+        value := [];
+    }
 
     method put(x: T)
         ensures value == old(value) + [x];
         modifies this;
+    {
+        value := value + [x];
+    }
 	
     method get() returns (r: T)
         requires value != [];
         ensures r == old(value[0]);
         ensures value == old(value[1..]);
         modifies this;
+    {
+        r := value[0];
+        value := value[1..];
+    }
 
-    method empty() returns (r: bool)
-        ensures r <==> value == [];
-
-    method contains(x: T) returns (r: bool)
-        ensures r <==> x in value;
+    function method empty(): bool
+        reads this;
+    {
+        value == []
+    }
 }
