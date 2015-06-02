@@ -15,8 +15,8 @@ class LandingHandler(tornado.web.RequestHandler):
     def get(self):
         loader = tornado.template.Loader("templates/")
         self.write(loader.load("landing.html").generate(
-            cities=g.getCityNames(),
-            airlines= g.getAirlines() + ["None"]
+            cities=sorted(g.getCityNames()),
+            airlines=["None"] + g.getAirlines()
             ))
 
 
