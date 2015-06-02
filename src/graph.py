@@ -30,6 +30,21 @@ class Graph():
                 #tripCal = dateTime()
         return potFlights
 
+    def getCityNames(self):
+        """gets all the city names and returns them in list format"""
+        cNames = []
+        for c in self.cities:
+            cNames.append(c.name)
+        return cNames
+
+    def getAirlines(self):
+        aNames = []
+        for c in self.cities:
+            for f in c.flights:
+                if f.airline not in aNames:
+                    aNames.append(f.airline)
+        return sorted(aNames)
+
 def getIndex(cities, searchingFor):
     """returns the index of a specified city in the cities list """
     i = -1

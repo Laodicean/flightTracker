@@ -4,19 +4,18 @@ import flightClasses
 import algorithm
 
 #testing file for the project
-g = graph.makeGraph("testFlights.txt")
-for c in g.cities:
-    print(c)
+g = graph.makeGraph("testdata")
+
 
 q = flightClasses.Query(
-        "1/1/2000",
-        "00:00",
-        "Syd",
-        "Wag",
+        "29/2/2000",
+        "08:40",
+        "Adelaide",
+        "Singapore",
+        "Qantas",
         "Cost",
         "Time",
-        "Qantas",
-        2)
+        1)
 
 x = algorithm.getFlightSolutions(q,g)
 ret = flightClasses.printSolutions(q,x)

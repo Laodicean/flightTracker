@@ -1,10 +1,13 @@
 import datetime
 def printSolutions(q,x):
+    count = 0
     ret = "( " + str(q) + "\n, ["
     for t in x:
-        ret += str(t)
-        if t != x[-1]:
-            ret += "\n"
+        if count < q.numFlights:
+            count += 1
+            ret += str(t)
+            if t != x[-1]:
+                ret += "\n"
     ret += "])"
     return ret
 
@@ -19,6 +22,7 @@ class Flight:
         self.cost = cost
 
     def __repr__(self):
+        s = "[ " + self.date
         s += ", " + self.time
         s += ", " + self.start
         s += ", " + self.end
@@ -47,7 +51,7 @@ class Trip:
             if f != self.listFlights[-1]:
                 x += "\n"
         x += " ), " + str(self.cost)
-        #x += ", " + str(self.duration)
+        x += ", " + str(self.currCal)
         x += ", " + str(self.ffPoint)
         x += ")"
         return x
@@ -94,7 +98,7 @@ class Trip:
         #Create date object
         currDate = date
         dateSplit = [int(i) for i in currDate.split('/')]
-        dateObj = datetime.date(dateSplit[2], dateSplit[0], dateSplit[1]) #year, day, month
+        dateObj = datetime.date(dateSplit[2], dateSplit[1], dateSplit[0]) #year, day, month
         #combine into datetime object
         dateTime = datetime.datetime.combine(dateObj, timeObj)
         return dateTime
@@ -134,9 +138,22 @@ class Query:
         res += ", "+self.time
         res += ", "+self.start
         res += ", "+self.end
-        res += ", ("+str(self.pref1)
-        res += ", "+str(self.pref2)
-        res += ", "+str(self.airlinePref)
+        if self.pref1 == "ffPoint" :
+            res += ", ("+str(self.airlinePref)
+        else :
+            res += ", ("+str(self.pref1)
+
+        if self.pref2 == "ffPoint" :
+            res += ", "+str(self.airlinePref)
+        else :
+            res += ", "+str(self.pref2)
+
+        if self.pref3 == "ffPoint" :
+            res += ", "+str(self.airlinePref)
+        else :
+            res += ", "+str(self.pref3)
+
+
         res += "), "+str(self.numFlights)
         res += " ]"
         return res
