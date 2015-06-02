@@ -4,6 +4,7 @@ datatype preferences = time | cost | flyerPoints
 class Date {
 	var day: int;
 	var month: int;
+	var year: int;
 /*
 	constructor init()
 	modifies this;
@@ -29,8 +30,8 @@ class Time {
 class Query {
 	var date: Date;
 	var time: Time;
-	var start: string;
-	var end: string;
+	var start: City;
+	var end: City;
     var airlinePref: preferences;
 	var pref1: preferences;
 	var pref2: preferences;
@@ -66,16 +67,16 @@ class City {
 
 class Trip {
     var startCal: (Date, Time);
-	var start: string;
-	var current: string;
-	var end: string;
+	var start: City;
+	var current: City;
+	var end: City;
 	var currCal: (Date, Time);
 	var cost: int;
 	var ffPoint: int;
 	var airlinePref: preferences;
 	var listFlights: seq<Flight>;
 
-    constructor init(date: Date, time: Time, start: string, end: string, airlinePref: preferences)
+    constructor init(date: Date, time: Time, start: City, end: City, airlinePref: preferences)
         modifies this;
     {
         this.startCal := (date, time);
@@ -88,6 +89,8 @@ class Trip {
         this.airlinePref := airlinePref;
         this.listFlights := [];
     }
+
+	
 }
 
 class Graph {
@@ -103,12 +106,40 @@ class Graph {
 	method getFlights(x: Trip) returns (y: seq<Flight>)
 
 		{
-		var potFlights : seq<Flight>;
-		var currentCity : int;
-		currentCity := this.getIndex(cities, currentCities);
+		
+			var potFlights : seq<Flight>;
+			var currentCity : City;
+			var index: int;
+			index := this.getIndex(cities, x.current);
+			currentCity := cities[index];
+			var i: int;
+			i := 0;
+			while i < |currentCity.flights|
+			{	
+				if currentCity.flights[i].date.year > x.currCal.0.year
+				{
+				}
+				i := i + 1;
+				//i := i + 1;
+			}
+
 		}
 
-	method get
+	method getIndex(x: seq<City>, y: City) returns (z : int)
+		{
+
+			var j: int;
+			j := 0;
+			z := -1;
+			while (j < |x|) 
+			{
+				if x[j] == y
+				{
+					z := j;
+				}
+				j := j + 1;
+			}		
+		}
 	
 
 }
