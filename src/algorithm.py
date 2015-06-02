@@ -11,7 +11,7 @@ def getFlightSolutions(query,g):
     """
     flightList = searchFlights(query,g)
     flightList = sortFlights(flightList,query)
-    return flightList
+    return flightList[:query.numFlights]
 
 def searchFlights(query,g):
     openQueue = Queue()
