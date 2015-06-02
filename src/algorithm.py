@@ -44,19 +44,19 @@ def searchFlights(query,g):
 def sortFlights(flightList,query):
     if query.pref1 == "Cost":
         if query.pref2 == "Time":
-            return sorted(flightList, key=lambda f:(f.cost, f.currCal, f.ffPoint))
+            return sorted(flightList, key=lambda f:(f.cost, f.currCal, -f.ffPoint))
         else:#ffPoint
-            return sorted(flightList, key=lambda f:(f.cost, f.ffPoint, f.currCal))
+            return sorted(flightList, key=lambda f:(f.cost, -f.ffPoint, f.currCal))
     elif query.pref1 == "Time":
         if query.pref2 == "Cost":
-            return sorted(flightList, key=lambda f:(f.currCal, f.cost, f.ffPoint))
+            return sorted(flightList, key=lambda f:(f.currCal, f.cost, -f.ffPoint))
         else: #ffPoint
-            return sorted(flightList, key=lambda f:(f.currCal, f.ffPoint, f.cost))
+            return sorted(flightList, key=lambda f:(f.currCal, -f.ffPoint, f.cost))
     else: #ffPoint
         if query.pref2 == "Cost":
-            return sorted(flightList, key=lambda f:(f.ffPoint, f.cost, f.currCal))
+            return sorted(flightList, key=lambda f:(-f.ffPoint, f.cost, f.currCal))
         else: #time
-            return sorted(flightList, key=lambda f:(f.ffPoint, f.currCal, f.cost))
+            return sorted(flightList, key=lambda f:(-f.ffPoint, f.currCal, f.cost))
 
 
 

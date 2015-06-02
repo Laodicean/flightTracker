@@ -1,10 +1,13 @@
 import datetime
 def printSolutions(q,x):
+    count = 0
     ret = "( " + str(q) + "\n, ["
     for t in x:
-        ret += str(t)
-        if t != x[-1]:
-            ret += "\n"
+        if count < q.numFlights:
+            count += 1
+            ret += str(t)
+            if t != x[-1]:
+                ret += "\n"
     ret += "])"
     return ret
 
