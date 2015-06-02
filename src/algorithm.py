@@ -18,7 +18,7 @@ def searchFlights(query,g):
     closedSet = set()
     solutions = []
     solCounter = 0
-    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,0,0,0,"")
+    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,query.airlinePref)
     openQueue.put(firstTrip)
     while( not openQueue.empty() and solCounter < query.numFlights):
         currTrip = openQueue.get()
@@ -42,18 +42,18 @@ def searchFlights(query,g):
 
 
 def sortFlights(flightList,query):
-    if query.pref1 == "cost":
-        if query.pref2 == "time":
+    if query.pref1 == "Cost":
+        if query.pref2 == "Time":
             return sorted(flightList, key=lambda f:(f.cost, f.currCal - f.startCal, f.ffPoint))
         else:#ffPoint
             return sorted(flightList, key=lambda f:(f.cost, f.ffPoint, f.currCal - f.startCal))
-    elif query.pref1 == "time":
-        if query.pref2 == "cost":
+    elif query.pref1 == "Time":
+        if query.pref2 == "Cost":
             return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.cost, f.ffPoint))
         else: #ffPoint
             return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.ffPoint, f.cost))
     else: #ffPoint
-        if query.pref2 == "cost":
+        if query.pref2 == "Cost":
             return sorted(flightList, key=lambda f:(f.ffPoint, f.cost, f.currCal - f.startCal))
         else: #time
             return sorted(flightList, key=lambda f:(f.ffPoint, f.currCal - f.startCal, f.cost))
