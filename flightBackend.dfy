@@ -89,12 +89,15 @@ class Graph {
 		cities := [];
 	}
 
-	method getFlights()
+	method getFlights(x: Trip) returns (y: seq<Flight>)
 
 		{
 		var potFlights : seq<Flight>;
-		var currentCity : City;
+		var currentCity : int;
+		currentCity := this.getIndex(cities, currentCities);
 		}
+
+	method get
 	
 
 }
@@ -186,11 +189,11 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
  method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
 	requires query != null;
 	requires flightList != [] && |flightList| > 0;
+
 //	ensures a sorted list
 // for i j, if i > j ==> seq[i] > seq[j]
 
 	{
-	
 	}
 
 	
