@@ -42,5 +42,6 @@ class QueryHandler(tornado.web.RequestHandler):
         try:
             self.write(loader.load("queryResponse.html").generate(
             trips = algorithm.getFlightSolutions(q,g)))
-        except:
+        except Exception as e:
             self.write(loader.load("errorResponse.html").generate())
+            raise e

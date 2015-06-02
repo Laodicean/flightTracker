@@ -1,30 +1,68 @@
 <div class="row">
-<div class="col-md-3 col-md-offset-1">
-<h3>Flights Found</h3>
-</div>
+    <div class="col-md-3 col-md-offset-1">
+        <h3>Flights Found</h3>
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-9 col-md-offset-1">
-	<div>
-		<table class="table table-striped">
-			<thead>
-			<tr>
-				<th>#</th>
-				<th>Departure Time</th>
-				<th>Arrival Time</th>
-				<th>Stopovers</th>
-				<th>Airline</th>
-				<th>Total Cost</th>
-				<th>Travel Time</th>
-				<th>Frequent Flyer Points</th>
-			</tr>
-			</thead>
-			{% for t in trips %}
-			<tr>
-				<td>{{t}}</td>
-			</tr>
-			{% end %}
-		</table>
-	</div>
-	</div>
+    <div class="col-md-9 col-md-offset-1">
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Travel Time</th>
+                        <th>Stopovers</th>
+                        <th>Airline</th>
+                        <th>Total Cost</th>
+                        <th>Frequent Flyer Points</th>
+                    </tr>
+                </thead>
+                {% for t in trips %}
+                <tr onclick="$('#trip{{ trips.index(t) + 1 }}').toggle('slow')">
+                    <td>{{ trips.index(t) + 1 }}</td>
+                    <td>{{ t.startCal }}</td>
+                    <td>{{ t.startCal + datetime.timedelta( minutes=t.currCal) }}</td>
+                    <td>{{ datetime.timedelta(minutes=t.currCal) }}</td>
+                    <td>{{ len(t.listFlights) }}</td>
+                    <td>{{ t.airlinePref }}</td>
+                    <td>${{ t.cost }}</td>
+                    <td>{{ t.ffPoint }}</td>
+                </tr>
+                <tr id="trip{{ trips.index(t) + 1 }}" style="display:none">
+                    <td colspan="8">
+                        <table class="table table-stripped">
+                            <thead>
+                                <tr>
+                                    <th>Flight No</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
+                                    <th>Travel Time</th>
+                                    <th>Airline</th>
+                                    <th>Cost</th>
+                                </tr>
+                            </thead>
+                            {% for f in t.listFlights %}
+                                <tr>
+                                    <td>{{t.listFlights.index(f) + 1}}</td>
+                                    <td>{{f.start}}</td>
+                                    <td>{{f.end}}</td>
+                                    <td>{{ t.convertTime(f.date, f.time) }}</td>
+                                    <td>{{ t.convertTime(f.date, f.time) + datetime.timedelta(minutes=f.duration)}}</td>
+                                    <td>{{ datetime.timedelta(minutes=f.duration)}}</td>
+                                    <td>{{f.airline}}</td>
+                                    <td>{{f.cost}}</td>
+                                </tr>
+                            {% end %}
+                        </table>
+                    </td>
+                </tr>
+                {% end %}
+            </table>
+        </div>
+    </div>
+    <button class="btn btn-lg btn-default" type="button" onclick="$('html, body').animate({ scrollTop: 0 }, 1500)">Back to Top</button>
 </div>
