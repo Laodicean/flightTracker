@@ -21,6 +21,9 @@ class Query {
 	var pref2: preferences;
 	var pref3: preferences;
 	var numFlight: int;
+
+	constructor init() 
+		
 }
 
 class Flight {
@@ -36,6 +39,13 @@ class Flight {
 class City {
 	var name : string;
 	var flights : array<Flight>;
+	
+	constructor init()
+	modifies this;
+	ensures flights != null;
+	{
+		flights := new array<Flight>;
+	}
 }
 
 class Trip {
@@ -92,11 +102,23 @@ predicate correctQuery (x: Query)
 
 //need to make pre-post for following, ensuring that data collected from these are correct
 //just so we can use it for later onwards, unless we don't have too?
-predicate correctFlight (x: Flight)
+predicate correctFlight (x: Flight, y: Graph)
 	reads x;
+	reads y;
+		requires x != null;
+		requires y != null;
+		requires correctGraph(y);
+		ensures correctTime(x.time);
+		ensures correctDate(x.date);
+		ensures exists u : City :: (u != null && u in y.cities && u.name == x.start);
+		ensures exists u : City :: (u != null && u in y.cities && u.name == x.dest);
 
-predicate correctCity (x: City)
+predicate correctCity (x: City, y : Graph)
 	reads x;
+	reads y;
+		requires x != null;
+		requires y != null;
+		requires correctGraph(y);
 
 predicate correctTrip (x: Trip)
     reads x;
