@@ -9,27 +9,25 @@ class City():
     def __repr__(self):
         x = str([str(i) for i in self.flights])
         return "name:{} flights:{}".format(self.name, x)
-class graph():
+class Graph():
     """ contains a list of cities that hold information from std input"""
     def __init__(self, cities):
         """creates(initialises a city object """
         self.cities = cities
 
-    def getFlights(trip, graph):
+    def getFlights(self, trip):
         """gets all VALID flights related to the latest city from the input TRIP
         from the graph"""
 
         potFlights = []
 
-        current = trip.current
-
-        originIndex = (graph, current)
+        currentCity = self.cities[getIndex(self.cities,trip.current)]
 
         #for everything that trip.curr connects to
-        for flight in graph[originIndex].flights:
-            if (convertTime(flight.date, flight.time) > trip.currCal):
-                potFlights.add(flight)
-                tripCal = dateTime()
+        for flight in currentCity.flights:
+            if (trip.convertTime(flight.date, flight.time) > trip.currCal):
+                potFlights.append(flight)
+                #tripCal = dateTime()
         return potFlights
 
 def getIndex(cities, searchingFor):
@@ -64,9 +62,9 @@ def makeGraph(filename):
                 cities.append(City(parts[2]))
                 foundCity = -1
 
-            myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6])
+            myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], int(parts[4]), parts[5], int(parts[6]))
             cities[foundCity].flights.append(myFlight)
-    return graph(cities)
+    return Graph(cities)
 
 """
 filename = sys.argv[2]

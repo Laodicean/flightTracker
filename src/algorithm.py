@@ -1,28 +1,29 @@
 #!/usr/bin/python3
 import time, datetime
 import flightClasses
-#import Queue #no module named queue?
-
-def getFlightSolutions(query,graph):
+from operator import itemgetter
+from queue import Queue #no module named queue?
+from copy import deepcopy
+def getFlightSolutions(query,g):
     """Retrieves a list of Trips containing soultions to the given query
     query: query object containing parameters for the search
     graph: Graph of cities
     """
-    flightList[query.numFlights] = searchFlights(query,graph)
+    flightList = searchFlights(query,g)
     flightList = sortFlights(flightList,query)
     return flightList
 
-def searchFlights(query,graph):
-    q = Queue.Queue()
-    visited = Queue.Queue()
-    openQueue = q
-    closedQueue = visited
+def searchFlights(query,g):
+    openQueue = Queue()
+    closedSet = set()
     solutions = []
     solCounter = 0
-    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,0,0,0)
+    firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,query.airlinePref)
     openQueue.put(firstTrip)
-    while( not openeQueue.empty() & solCounter < query.numFlights):
-        currTrip = openeQueue.get()
+    while( not openQueue.empty() and solCounter < query.numFlights):
+        currTrip = openQueue.get()
+        if currTrip in closedSet:
+            continue
         if (currTrip.current == currTrip.end):
             #currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
             currTrip.currCal = int(time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple())/60) #currCal may or may not be the right place to put this
@@ -30,62 +31,32 @@ def searchFlights(query,graph):
             solCounter += 1
         else:
             appendList = []
-            appendList = graph.getFlights(currTrip)
+            appendList = g.getFlights(currTrip)
             for currFlight in appendList:
-                newTrip = currTrip.clone()
+                newTrip = deepcopy(currTrip)
                 newTrip.appendFlight(currFlight)
-                if (currTrip not in closedQueue & currTrip not in openQueue):
-                    openQueue.put(newTrip)
+                openQueue.put(newTrip)
 
-        closedQueue.put(currTrip)
+        closedSet.add(currTrip)
     return solutions
 
 
-def sortFlight(flightList,query):
-    swaps = 1
-    passes = 0
-    while (passes <query.numFlight-1 & swaps != 0):
-        counter = 0
-        swaps = 0
-        while (counter < query.numFlights - 1):
-            current = compare(flightList[counter],flightList[counter+1],query.pref1)
-            if current == 1:
-                solutionSwap(flightList,counter);
-                swaps = 1
-            elif (current == -1):
-                currPref2 = compare(flightList[counter],flightList[counter+1],query.pref2)
-                if (currPref2 == 1):
-                    solutionSwap(flightList,counter);
-                    swap = 1
-                elif (currPref2 == -1):
-                    currPref3 = compare(flightList[counter],flightList[counter+1],query.pref3)
-                    if (currPref3 == 1):
-                        solutionSwap(flightList,counter);
-                        swap = 1
-            counter += 1
-        passes += 1
-
-def compare(one,two,comparator):
-    if (comparator == flightClasses.POINT_PREF):
-        if (one.ffPoint > two.ffPoint):
-            return 1
-        elif (one.ffPoint == two.ffPoint):
-            return -1
-    else:
-        if(comparator == flightClasses.TIME_PREF):
-            if(one.duration < two.duration):
-                return 1
-            elif(one.duration == two.duration):
-                return -1
-        else:
-            if (one.cost < two.cost):
-                return 1
-            elif (one.cost < two.cost):
-                return -1
-    return 0
+def sortFlights(flightList,query):
+    if query.pref1 == "Cost":
+        if query.pref2 == "Time":
+            return sorted(flightList, key=lambda f:(f.cost, f.currCal - f.startCal, f.ffPoint))
+        else:#ffPoint
+            return sorted(flightList, key=lambda f:(f.cost, f.ffPoint, f.currCal - f.startCal))
+    elif query.pref1 == "Time":
+        if query.pref2 == "Cost":
+            return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.cost, f.ffPoint))
+        else: #ffPoint
+            return sorted(flightList, key=lambda f:(f.currCal - f.startCal, f.ffPoint, f.cost))
+    else: #ffPoint
+        if query.pref2 == "Cost":
+            return sorted(flightList, key=lambda f:(f.ffPoint, f.cost, f.currCal - f.startCal))
+        else: #time
+            return sorted(flightList, key=lambda f:(f.ffPoint, f.currCal - f.startCal, f.cost))
 
 
-def solutionSwap(flightList,counter):
-    temp = flightList[counter]
-    flightList[counter] = flightList[counter + 1]
-    flightList[coutner +1] = temp
+
