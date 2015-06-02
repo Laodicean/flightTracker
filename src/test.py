@@ -13,12 +13,11 @@ q = flightClasses.Query(
         "00:00",
         "Syd",
         "Wag",
-        "cost",
-        "time",
-        "ffPoint",
+        "Cost",
+        "Time",
+        "Qantas",
         2)
-print(q)
 
 x = algorithm.getFlightSolutions(q,g)
-for t in x:
-    print(t)
+ret = flightClasses.printSolutions(q,x)
+print (ret)
