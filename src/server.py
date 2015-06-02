@@ -12,6 +12,7 @@ application = tornado.web.Application([
     (r"/", pages.LandingHandler),
     (r"/landing", pages.LandingHandler),
     (r"/query", pages.QueryHandler),
+    (r"/static/(.*)", tornado.web.StaticFileHandler, {'path': static_path})
     ], debug=True
     )
 
