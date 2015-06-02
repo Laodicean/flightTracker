@@ -1,6 +1,4 @@
-
 datatype preferences = time | cost | flyerPoints
-
 
 
 class Query {
@@ -12,9 +10,6 @@ class Query {
 	var pref2: preferences;
 	var pref3: preferences;
 	var numFlights: int;
-
-	constructor init() 
-
 }
 
 class Flight {
@@ -29,7 +24,6 @@ class Flight {
 class City {
 	var name : string;
 	var flights : seq<Flight>;
-
 }
 
 class Trip {
@@ -43,10 +37,10 @@ class Trip {
 	var airlinePref: preferences;
 	var listFlights: seq<Flight>;
 
-    constructor init(minute: int, start: City, end: City, airlinePref: preferences)
+    constructor init(minutes: int, start: City, end: City, airlinePref: preferences)
         modifies this;
     {
-        this.startCal := minute;
+        this.startCal := minutes;
         this.start := start;
         this.current := start;
         this.end := end;
@@ -55,9 +49,7 @@ class Trip {
         this.ffPoint := 0;
         this.airlinePref := airlinePref;
         this.listFlights := [];
-    }
-
-	
+    }	
 }
 
 class Graph {
@@ -200,9 +192,9 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
         {
             if currTrip.current == currTrip.end
             {
-                currTrip.startCal := (currTrip.listFlights[0].date, currTrip.listFlights[0].time);
-                currTrip.currCal := compare(currTrip.currCal, currTrip.startCal); //TODO: write this
-                currTrip.ffPoint := currTrip.ffPoint / 60; // assuming that Dafny truncates the result like Java/C
+                currTrip.startCal := currTrip.listFlights[0].minutes;
+                currTrip.currCal := currTrip.currCal - currTrip.startCal;
+                currTrip.ffPoint := currTrip.ffPoint / 60; // assuming Dafny truncates the result like in Java/C
                 solutions := solutions + [currTrip];
             } else {
                 var appendList := [];
@@ -250,12 +242,7 @@ method deepcopy(oldT: Trip) returns (newT: Trip)
 	ensures newT.airlinePref == oldT.airlinePref;
 	ensures newT.listFlights == oldT.listFlights;
 {
-    newT := new Trip.init(oldT.startCal.0, oldT.startCal.1, oldT.start, oldT.end, oldT.airlinePref);
-}
-
-method compare(cal1: (Date, Time), cal2: (Date, Time)) returns (difference: int)
-{
-
+    newT := new Trip.init(oldT.startCal, oldT.start, oldT.end, oldT.airlinePref);
 }
 
 
