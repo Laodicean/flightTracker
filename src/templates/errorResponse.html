@@ -3,7 +3,7 @@
 <div class='col-md-9'>
 <h3>Invalid Input Error</h3>
 <div>
-The input you've given us is invalid, please resubmit your query with valid input.
+{{ msg if msg else "The input you've given us is invalid, please resubmit your query with valid input." }}
 </div>
 <br>
 </div>
