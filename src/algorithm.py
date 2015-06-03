@@ -24,11 +24,17 @@ def searchFlights(query,g):
         if currTrip in closedSet:
             continue
         if (currTrip.current == currTrip.end):
-            #currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
-            currTrip.startCal = currTrip.convertTime(currTrip.listFlights[0].date,currTrip.listFlights[0].time)
-            currTrip.currCal = int((time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple()))/60) #currCal may or may not be the right place to put this
-            currTrip.ffPoint = currTrip.ffPoint // 60
-            solutions.append(currTrip)
+        	airlineFlag = 0
+        	if query.pref1 == "ffPoint" and query.airlinePref != "None":
+        		for lookFlight in currTrip.listFlights:
+        			if lookFlight.airline != query.airlinePref:
+        				airlineFlag = 1
+        	
+        	if airlineFlag == 0:	#currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
+		        currTrip.startCal = currTrip.convertTime(currTrip.listFlights[0].date,currTrip.listFlights[0].time)
+		        currTrip.currCal = int((time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple()))/60) #currCal may or may not be the right place to put this
+		        currTrip.ffPoint = currTrip.ffPoint // 60
+		        solutions.append(currTrip)
         else:
             appendList = []
             appendList = g.getFlights(currTrip)
