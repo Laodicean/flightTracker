@@ -99,42 +99,45 @@ class Graph {
 	}
 
 	method getFlights(x: Trip) returns (y: seq<Flight>)
-		//requires forall l: City :: cities == cities + [l]; 
-		//requires Graph != null;
-		//requires this.cities != null;
+
 		requires x != null;
         //ensures forall f: Flight | f in y :: f != null;
 		{
-			//assume this.cities != null;
 			var potFlights : seq<Flight>;
 			var currentCity : City;
 			var index: int;
+			assume this.cities != [];
+			assume x.current != null;
 			index := this.getIndex(this.cities, x.current);
 		
-			if index != -1
+			if index > -1
 			{
-				assume 0 <= index < |cities|;
+				//assume 0 <= index < |cities|;
 				currentCity := cities[index];
 				var i: int;
 				i := 0;
 				assume currentCity != null;
+				//we're assuming that the flights and cities have been added to the graph
+				//since currentCity is getting an item from cities (in graph class that we're in)
 				while i < |currentCity.flights|
 				{	
-					assume currentCity.flights[i] != null;
+					assume currentCity.flights[i] != null; 
+					//we're assuming that the flights and cities have been added to the graph
+					//because we're only verifying the algorithms in the code, not the parsing of data
 					if currentCity.flights[i].minutes > x.currCal
 					{
 					y := y + [currentCity.flights[i]];
 					}
 					i := i + 1;
-					//i := i + 1;
 				}
 			}
 
 		}
 
 	method getIndex(citys: seq<City>, searchingFor: City) returns (z : int)
+		requires citys != [];
+		requires searchingFor != null;
 		ensures z < |citys|;
-		
 		{
 
 			var j: int;
@@ -149,6 +152,7 @@ class Graph {
 				}
 				j := j + 1;
 			}		
+
 		}
 	
 
@@ -209,9 +213,11 @@ predicate correctCity (x: City, y : Graph)
 predicate correctTrip (x: Trip)
     reads x;
 	*/
+	/*
 predicate correctGraph (x: Graph)
     reads x;
-
+		requires x != null;
+		*/
 	
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires query != null;
@@ -238,7 +244,11 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     solutions := [];
     var firstTrip := new Trip.init(query.minutes, query.start, query.end, query.airlinePref);
     openQueue.put(firstTrip);
+
     while !openQueue.empty()
+		//decreases (|openQueue.value|);
+		//I1
+		//invariant 	
     {
         var currTrip := openQueue.get();
         if !(currTrip in closedSet)
