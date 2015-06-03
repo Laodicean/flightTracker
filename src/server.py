@@ -4,7 +4,13 @@
 
 import tornado
 import os
-import pages
+import pages 
+import sys
+
+if len(sys.argv) < 2:
+    pages.g = pages.graph.makeGraph('testData')
+else:
+    pages.g = pages.graph.makeGraph(sys.argv[1])
 
 PORT = 8080
 
