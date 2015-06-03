@@ -44,7 +44,9 @@ class Trip {
 	var listFlights: seq<Flight>;
 
     constructor init(minutes: int, start: City, end: City, airlinePref: string)
-        ensures this.startCal == minutes;
+        requires start != null;
+		requires end != null;
+		ensures this.startCal == minutes;
         ensures this.start == start;
         ensures this.current == start;
         ensures this.end == end;
@@ -149,7 +151,7 @@ class Graph {
 					i := i + 1;
 				}
 			}
-		}
+	}
 
 	method getIndex(citys: seq<City>, searchingFor: City) returns (z : int)
 		requires citys != [];
@@ -174,78 +176,17 @@ class Graph {
 				j := j + 1;
 			}		
 		}
-	
-	
-
 }
-/*
-predicate correctPref(c:preferences) 
-	ensures c in {time, cost, flyerPoints} ;
-
-
-predicate correctTime(x: Time)
-	reads x;
-		ensures x != null;
-		ensures x.minute >= 0;
-		ensures x.minute < 60;
-		ensures x.hour >= 0;
-		ensures x.hour < 24;
-		
-predicate correctDate(x:Date)
-	reads x;
-		ensures x != null 
-		ensures x.day >= 0
-		ensures x.month > 0 
-		ensures x.month <= 12 
-		//since the upper bound is varied for days (28, 29, 30, 31), 
-		//we can't explicitly denote that, unless you want it to be <= 31...
-
-predicate correctQuery (x: Query)
-	reads x;
-		requires x != null;
-		ensures correctTime(x.time);
-		ensures correctDate(x.date);
-		ensures correctPref(x.pref1) && correctPref(x.pref2) && correctPref(x.pref3)
-		//need to ensure start and end are in the graph class...
-		ensures x.numFlights > 0;
-		//second thoughts...we're not parsing the data here... so we need to have correct datas ...
-		//might need to ensure everything else is not null or valid
-
-//need to make pre-post for following, ensuring that data collected from these are correct
-//just so we can use it for later onwards, unless we don't have too?
-predicate correctFlight (x: Flight, y: Graph)
-	reads x;
-	reads y;
-		requires x != null;
-		requires y != null;
-		requires correctGraph(y);
-		ensures correctTime(x.time);
-		ensures correctDate(x.date);
-		ensures exists u : City :: (u != null && u in y.cities && u.name == x.start);
-		ensures exists u : City :: (u != null && u in y.cities && u.name == x.dest);
-
-predicate correctCity (x: City, y : Graph)
-	reads x;
-	reads y;
-		requires x != null;
-		requires y != null;
-		requires correctGraph(y);
-
-predicate correctTrip (x: Trip)
-    reads x;
-	*/
-	/*
-predicate correctGraph (x: Graph)
-    reads x;
-		requires x != null;
-		*/
 	
-method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
-	requires query != null;
-    requires g != null;
-//	requires correctQuery(query);
-//    requires correctGraph(g);
+predicate correctQuery(q: Query)
+reads q;
+{
+q != null && q.start != null && q.end != null
+}
 
+method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
+	requires correctQuery(query);
+    requires g != null;
     //ensures that flightList matches the spec!
 {
 
@@ -257,7 +198,9 @@ method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>
 
 
 method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
-    requires query != null;
+    requires correctQuery(query);
+	requires query.start != null;
+	requires query.end != null;
     requires g != null;
 {
     var openQueue := new Queue<Trip>.init();
@@ -266,15 +209,20 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     var firstTrip := new Trip.init(query.minutes, query.start, query.end, query.airlinePref);
     openQueue.put(firstTrip);
 
+	//this while loop does not terminate because it could be a case where the graph is infinitely big
+	//need to ensure a closed graph...
     while !openQueue.empty()
-		//decreases (|openQueue.value|);
+		decreases (|openQueue.value|);
 		//I1
 		//invariant 	
     {
+		
         var currTrip := openQueue.get();
+		assume currTrip != null; //for some reason Dafny is being cranky and won't let
+								//me do this ensures in the queue class  so im assuming it here:(
         if !(currTrip in closedSet)
         {
-            if currTrip.current == currTrip.end
+            if currTrip.end == currTrip.current
             {
                 var airlineFlag := 0;
                 if query.pref1 == ffPoint && query.airlinePref != "None"
@@ -294,6 +242,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
                 }
                 if airlineFlag == 0
                 {
+					//dafny, why you no know python? :(
                     currTrip.startCal := currTrip.listFlights[0].minutes;
                     currTrip.currCal := currTrip.currCal - currTrip.startCal;
                     currTrip.ffPoint := currTrip.ffPoint / 60; // assuming Dafny truncates the result like in Java/C
@@ -301,6 +250,8 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
                 }
             } else {
                 var appendList := [];
+				assume currTrip.current != null; //sneaky assume due to the fact that we're not taking in a 'query'
+									//(no handling of inputs in dafny) hence currTrip may have null stuff 
                 appendList := g.getFlights(currTrip);
 
                 var i := 0;
@@ -367,6 +318,7 @@ class Queue<T> {
 
     method put(x: T)
         ensures value == old(value) + [x];
+		ensures |value| == old (|value|) + 1
         modifies this;
     {
         value := value + [x];
