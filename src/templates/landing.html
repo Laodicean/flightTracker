@@ -67,7 +67,7 @@ $(function() {
                         </div>
                     </div>
                     <div class="form-group">
-                        How important are each of these to you? Please rank your preferences below by dragging:
+                        How important are each of these to you? Please click and drag your preferences below:
                         <div class="row">
                             <div class="col-md-6">
                                 <ul id="sortable">
@@ -88,7 +88,7 @@ $(function() {
                         <br>
                         <div class="form-group">
                             How many offers would you like to see?
-                            <input class="form-control" type="number" name="number" value="1">
+                            <input class="form-control" type="number" name="number" value="1" min="0">
                         </div>
                         <br>
                         <button class="btn btn-lg btn-default" type="button" onclick="SendQuery()">Submit Query!</button>
