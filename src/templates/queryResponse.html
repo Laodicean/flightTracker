@@ -23,10 +23,10 @@
                 {% for t in trips %}
                 <tr onclick="$('#trip{{ trips.index(t) + 1 }}').toggle('slow')">
                     <td>{{ trips.index(t) + 1 }}</td>
-                    <td>{{ t.startCal.day }}/{{ t.startCal.month }}/{{ t.startCal.year }}</td>
-                    <td>{{ t.startCal + datetime.timedelta( minutes=t.currCal) }}</td>
+                    <td>{{ t.startCal.day }}/{{ t.startCal.month }}/{{ t.startCal.year }} at {{ str(t.startCal)[-8:-3] }}</td>
+                    <td>{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).day }}/{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).month }}/{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).year }} at {{ str((t.startCal + datetime.timedelta( minutes=t.currCal)))[-8:-3] }}</td>
                     <td>{{ datetime.timedelta(minutes=t.currCal) }}</td>
-                    <td>{{ len(t.listFlights) }}</td>
+                    <td>{{ len(t.listFlights) - 1 }}</td>
                     <td>{{ t.airlinePref }}</td>
                     <td>${{ t.cost }}</td>
                     <td>{{ t.ffPoint }}</td>
@@ -42,7 +42,7 @@
                                     <th>Departure</th>
                                     <th>Arrival</th>
                                     <th>Travel Time</th>
-                                    <th>Airline</th>
+                                    <th>Airline Preference</th>
                                     <th>Cost</th>
                                 </tr>
                             </thead>
@@ -51,8 +51,8 @@
                                     <td>{{t.listFlights.index(f) + 1}}</td>
                                     <td>{{f.start}}</td>
                                     <td>{{f.end}}</td>
-                                    <td>{{ t.convertTime(f.date, f.time) }}</td>
-                                    <td>{{ t.convertTime(f.date, f.time) + datetime.timedelta(minutes=f.duration)}}</td>
+                                    <td>{{ t.convertTime(f.date, f.time).day }}/{{ t.convertTime(f.date, f.time).month }}/{{ t.convertTime(f.date, f.time).year }} at {{ str(t.convertTime(f.date, f.time))[-8:-3] }}</td>
+                                    <td>{{ (t.convertTime(f.date, f.time) + datetime.timedelta( minutes=f.duration)).day }}/{{ (t.convertTime(f.date, f.time) + datetime.timedelta( minutes=f.duration)).month }}/{{ (t.convertTime(f.date, f.time) + datetime.timedelta( minutes=f.duration)).year }} at {{ str((t.convertTime(f.date, f.time) + datetime.timedelta( minutes=f.duration)))[-8:-3] }}</td>
                                     <td>{{ datetime.timedelta(minutes=f.duration)}}</td>
                                     <td>{{f.airline}}</td>
                                     <td>${{f.cost}}</td>
