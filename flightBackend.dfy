@@ -99,34 +99,53 @@ class Graph {
 	}
 
 	method getFlights(x: Trip) returns (y: seq<Flight>)
+	requires x != null;
+		requires x.current != null;
+		ensures y != [] ==> (forall x1 : Flight :: x1 != null && x1 in y ==> x.currCal < x1.minutes)
+				&& y == [] ==> (forall x1 : Flight :: x1 != null && x1 !in y)
 
-		requires x != null;
-        //ensures forall f: Flight | f in y :: f != null;
 		{
 			var potFlights : seq<Flight>;
 			var currentCity : City;
 			var index: int;
 			assume this.cities != [];
-			assume x.current != null;
+			//we're assuming that the flights and cities have been added to the graph
+			//because we're only verifying the algorithms in the code, not the parsing of data
 			index := this.getIndex(this.cities, x.current);
 		
 			if index > -1
 			{
-				//assume 0 <= index < |cities|;
+
 				currentCity := cities[index];
-				var i: int;
+				ghost var old_y : seq<Flight>;
+				var i: nat;
 				i := 0;
 				assume currentCity != null;
+				assume |currentCity.flights| > 0;
+				assume currentCity.flights[0] != null;
+
 				//we're assuming that the flights and cities have been added to the graph
 				//since currentCity is getting an item from cities (in graph class that we're in)
 				while i < |currentCity.flights|
+					//I1
+					invariant i <= |currentCity.flights|
+					//I2
+					invariant forall j: nat :: j < i ==> currentCity.flights[j] != null;
+					//I3
+					//this invariant says that if y is empty, nothing is in that list, otherwise 
+					//if y is not empty, then an element (x1 - Flight) is in y
+					invariant y == [] ==> (forall x1 : Flight :: x1 in currentCity.flights ==> x1 !in y) &&  
+					y != [] ==> (forall x1 : Flight :: x1 in currentCity.flights && x1.minutes > x.currCal ==> x1 in y);
+
+					decreases (|currentCity.flights| - i)
+						//		ensures forall x1 : Flight :: x1 != null && x.currCal > x1.minutes ==> x1 !in y
 				{	
-					assume currentCity.flights[i] != null; 
+					assume currentCity.flights[i] != null;
 					//we're assuming that the flights and cities have been added to the graph
-					//because we're only verifying the algorithms in the code, not the parsing of data
+					//same reason as having the assume this.cities != []
 					if currentCity.flights[i].minutes > x.currCal
 					{
-					y := y + [currentCity.flights[i]];
+						y := y + [currentCity.flights[i]];
 					}
 					i := i + 1;
 				}
