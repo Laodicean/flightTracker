@@ -230,7 +230,7 @@ method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>
 
     flightList := searchFlights(query, g);
 //	ghost var oldFlightList
-	assume flightList != [];
+	//assume flightList != [];
     flightList := sortFlights(flightList, query);
 }
 
@@ -255,13 +255,32 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
         {
             if currTrip.current == currTrip.end
             {
-                currTrip.startCal := currTrip.listFlights[0].minutes;
-                currTrip.currCal := currTrip.currCal - currTrip.startCal;
-                currTrip.ffPoint := currTrip.ffPoint / 60; // assuming Dafny truncates the result like in Java/C
-                solutions := solutions + [currTrip];
+                var airlineFlag := 0;
+                if query.pref1 == ffPoint && query.airlinePref != "None"
+                {
+                    var j := 0;
+                    while j < |currTrip.listFlights|
+                    {
+                        var lookFlight := currTrip.listFlights[j];
+
+                        if lookFlight.airline != query.airlinePref
+                        {
+                            airlineFlag := 1;
+                        }
+
+                        j := j + 1;
+                    }
+                }
+                if airlineFlag == 0
+                {
+                    currTrip.startCal := currTrip.listFlights[0].minutes;
+                    currTrip.currCal := currTrip.currCal - currTrip.startCal;
+                    currTrip.ffPoint := currTrip.ffPoint / 60; // assuming Dafny truncates the result like in Java/C
+                    solutions := solutions + [currTrip];
+                }
             } else {
                 var appendList := [];
-                appendList := g.getFlights(currTrip); //TODO: write this
+                appendList := g.getFlights(currTrip);
 
                 var i := 0;
                 while i < |appendList|
@@ -283,7 +302,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
 
 method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq<Trip>)
 	requires query != null;
-	requires flightList != [] && |flightList| > 0;
+	//requires flightList != [] && |flightList| > 0;
 
 //	ensures a sorted list
 // for i j, if i > j ==> seq[i] > seq[j]
@@ -294,7 +313,7 @@ method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq
 method deepcopy(oldT: Trip) returns (newT: Trip)
     requires oldT != null;
     ensures newT != null;
-    ensures newT != oldT;
+    ensures fresh(newT);
     ensures newT.startCal == oldT.startCal;
 	ensures newT.start == oldT.start;
 	ensures newT.current == oldT.current;
