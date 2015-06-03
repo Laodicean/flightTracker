@@ -24,6 +24,12 @@ class Flight {
 class City {
 	var name : string;
 	var flights : seq<Flight>;
+
+	constructor init()
+		modifies this;
+		{
+		flights := [];
+		}
 }
 
 class Trip {
@@ -85,39 +91,61 @@ class Trip {
 class Graph {
 	var cities: seq<City>;
 
+	constructor init ()
+	ensures this.cities == [];
+	modifies this;
+	{
+	cities := [];
+	}
+
 	method getFlights(x: Trip) returns (y: seq<Flight>)
-        ensures forall f: Flight | f in y :: f != null;
+		//requires forall l: City :: cities == cities + [l]; 
+		//requires Graph != null;
+		//requires this.cities != null;
+		requires x != null;
+        //ensures forall f: Flight | f in y :: f != null;
 		{
-		
+			//assume this.cities != null;
 			var potFlights : seq<Flight>;
 			var currentCity : City;
 			var index: int;
-			index := this.getIndex(cities, x.current);
-			currentCity := cities[index];
-			var i: int;
-			i := 0;
-			while i < |currentCity.flights|
-			{	
-				if currentCity.flights[i].minutes > x.currCal
-				{
+			index := this.getIndex(this.cities, x.current);
+		
+			if index != -1
+			{
+				assume 0 <= index < |cities|;
+				currentCity := cities[index];
+				var i: int;
+				i := 0;
+				assume currentCity != null;
+				while i < |currentCity.flights|
+				{	
+					assume currentCity.flights[i] != null;
+					if currentCity.flights[i].minutes > x.currCal
+					{
+					y := y + [currentCity.flights[i]];
+					}
+					i := i + 1;
+					//i := i + 1;
 				}
-				i := i + 1;
-				//i := i + 1;
 			}
 
 		}
 
-	method getIndex(x: seq<City>, y: City) returns (z : int)
+	method getIndex(citys: seq<City>, searchingFor: City) returns (z : int)
+		ensures z < |citys|;
+		
 		{
 
 			var j: int;
 			j := 0;
 			z := -1;
-			while (j < |x|) 
+			while (j < |citys|) 
 			{
-				if x[j] == y
+				if citys[j] == searchingFor
 				{
 					z := j;
+					break;
 				}
 				j := j + 1;
 			}		
