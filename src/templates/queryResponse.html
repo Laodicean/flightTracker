@@ -23,7 +23,7 @@
                 {% for t in trips %}
                 <tr onclick="$('#trip{{ trips.index(t) + 1 }}').toggle('slow')">
                     <td>{{ trips.index(t) + 1 }}</td>
-                    <td>{{ t.startCal }}</td>
+                    <td>{{ t.startCal.day }}/{{ t.startCal.month }}/{{ t.startCal.year }}</td>
                     <td>{{ t.startCal + datetime.timedelta( minutes=t.currCal) }}</td>
                     <td>{{ datetime.timedelta(minutes=t.currCal) }}</td>
                     <td>{{ len(t.listFlights) }}</td>
@@ -55,7 +55,7 @@
                                     <td>{{ t.convertTime(f.date, f.time) + datetime.timedelta(minutes=f.duration)}}</td>
                                     <td>{{ datetime.timedelta(minutes=f.duration)}}</td>
                                     <td>{{f.airline}}</td>
-                                    <td>{{f.cost}}</td>
+                                    <td>${{f.cost}}</td>
                                 </tr>
                             {% end %}
                         </table>
