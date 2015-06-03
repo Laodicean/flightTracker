@@ -102,7 +102,7 @@ class Graph {
 	requires x != null;
 		requires x.current != null;
 		ensures y != [] ==> (forall x1 : Flight :: x1 != null && x1 in y ==> x.currCal < x1.minutes)
-				&& y == [] ==> (forall x1 : Flight :: x1 != null && x1 !in y)
+		&& y == [] ==> (forall x1 : Flight :: x1 != null && x1 !in y)
 
 		{
 			var potFlights : seq<Flight>;
@@ -138,7 +138,6 @@ class Graph {
 					y != [] ==> (forall x1 : Flight :: x1 in currentCity.flights && x1.minutes > x.currCal ==> x1 in y);
 
 					decreases (|currentCity.flights| - i)
-						//		ensures forall x1 : Flight :: x1 != null && x.currCal > x1.minutes ==> x1 !in y
 				{	
 					assume currentCity.flights[i] != null;
 					//we're assuming that the flights and cities have been added to the graph
@@ -150,7 +149,6 @@ class Graph {
 					i := i + 1;
 				}
 			}
-
 		}
 
 	method getIndex(citys: seq<City>, searchingFor: City) returns (z : int)
@@ -158,11 +156,15 @@ class Graph {
 		requires searchingFor != null;
 		ensures z < |citys|;
 		{
-
-			var j: int;
+			var j: nat;
 			j := 0;
 			z := -1;
-			while (j < |citys|) 
+			while (j < |citys|) && z == -1
+
+			invariant j <= |citys|;
+			invariant forall i: nat :: i < j ==> citys[i] != searchingFor;
+
+			decreases (|citys| - j) 
 			{
 				if citys[j] == searchingFor
 				{
@@ -171,8 +173,8 @@ class Graph {
 				}
 				j := j + 1;
 			}		
-
 		}
+	
 	
 
 }
