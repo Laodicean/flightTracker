@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-3 col-md-offset-1">
-        <h3>Flights Found</h3>
+        <h3>{{len(trips)}} Results Found</h3>
         <h4>Click a row to toggle additional flight information.</h4>
     </div>
 </div>
@@ -15,8 +15,8 @@
                         <th>Arrival</th>
                         <th>Travel Time</th>
                         <th>Stopovers</th>
-                        <th>Airline</th>
                         <th>Total Cost</th>
+                        <th>Airline</th>
                         <th>Frequent Flyer Points</th>
                     </tr>
                 </thead>
@@ -27,8 +27,8 @@
                     <td>{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).day }}/{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).month }}/{{ (t.startCal + datetime.timedelta( minutes=t.currCal)).year }} at {{ str((t.startCal + datetime.timedelta( minutes=t.currCal)))[-8:-3] }}</td>
                     <td>{{ datetime.timedelta(minutes=t.currCal) }}</td>
                     <td>{{ len(t.listFlights) - 1 }}</td>
-                    <td>{{ t.airlinePref }}</td>
                     <td>${{ t.cost }}</td>
+                    <td>{{ t.airlinePref }}</td>
                     <td>{{ t.ffPoint }}</td>
                 </tr>
                 <tr id="trip{{ trips.index(t) + 1 }}" style="display:none">
