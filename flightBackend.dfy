@@ -101,8 +101,9 @@ class Graph {
 	}
 
 	method getFlights(x: Trip) returns (y: seq<Flight>)
-	requires x != null;
+	    requires x != null;
 		requires x.current != null;
+        requires correctCities(this.cities);
 		ensures y != [] ==> (forall x1 : Flight :: x1 != null && x1 in y ==> x.currCal < x1.minutes)
 		&& y == [] ==> (forall x1 : Flight :: x1 != null && x1 !in y)
 
@@ -110,7 +111,7 @@ class Graph {
 			var potFlights : seq<Flight>;
 			var currentCity : City;
 			var index: int;
-			assume this.cities != [];
+			//assume this.cities != [];
 			//we're assuming that the flights and cities have been added to the graph
 			//because we're only verifying the algorithms in the code, not the parsing of data
 			index := this.getIndex(this.cities, x.current);
@@ -119,12 +120,12 @@ class Graph {
 			{
 
 				currentCity := cities[index];
-				ghost var old_y : seq<Flight>;
+				//ghost var old_y : seq<Flight>;
 				var i: nat;
 				i := 0;
-				assume currentCity != null;
-				assume |currentCity.flights| > 0;
-				assume currentCity.flights[0] != null;
+				//assume currentCity != null;
+				//assume |currentCity.flights| > 0;
+				//assume currentCity.flights[0] != null;
 
 				//we're assuming that the flights and cities have been added to the graph
 				//since currentCity is getting an item from cities (in graph class that we're in)
@@ -139,9 +140,9 @@ class Graph {
 					invariant y == [] ==> (forall x1 : Flight :: x1 in currentCity.flights ==> x1 !in y) &&  
 					y != [] ==> (forall x1 : Flight :: x1 in currentCity.flights && x1.minutes > x.currCal ==> x1 in y);
 
-					decreases (|currentCity.flights| - i)
+					//decreases (|currentCity.flights| - i) // Not required
 				{	
-					assume currentCity.flights[i] != null;
+					//assume currentCity.flights[i] != null;
 					//we're assuming that the flights and cities have been added to the graph
 					//same reason as having the assume this.cities != []
 					if currentCity.flights[i].minutes > x.currCal
@@ -166,7 +167,7 @@ class Graph {
 			invariant j <= |citys|;
 			invariant forall i: nat :: i < j ==> citys[i] != searchingFor;
 
-			decreases (|citys| - j) 
+			//decreases (|citys| - j) // Not required
 			{
 				if citys[j] == searchingFor
 				{
@@ -179,14 +180,21 @@ class Graph {
 }
 	
 predicate correctQuery(q: Query)
-reads q;
+    reads q;
 {
-q != null && q.start != null && q.end != null
+    q != null && q.start != null && q.end != null
+}
+
+predicate correctCities(cities: seq<City>)
+    reads cities;
+{
+    cities != [] && null !in cities && forall c: City | c in cities :: null !in c.flights
 }
 
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires correctQuery(query);
     requires g != null;
+    requires correctCities(g.cities);
     //ensures that flightList matches the spec!
 {
 
@@ -199,9 +207,8 @@ method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>
 
 method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     requires correctQuery(query);
-	requires query.start != null;
-	requires query.end != null;
     requires g != null;
+    requires correctCities(g.cities);
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
@@ -212,17 +219,19 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
 	//this while loop does not terminate because it could be a case where the graph is infinitely big
 	//need to ensure a closed graph...
     while !openQueue.empty()
-		decreases (|openQueue.value|);
+        invariant null !in openQueue.value;
+        invariant forall t: Trip | t in openQueue.value :: t.current != null;
 		//I1
 		//invariant 	
+		decreases (|openQueue.value|);
     {
 		
         var currTrip := openQueue.get();
-		assume currTrip != null; //for some reason Dafny is being cranky and won't let
+		//assume currTrip != null; //for some reason Dafny is being cranky and won't let
 								//me do this ensures in the queue class  so im assuming it here:(
         if !(currTrip in closedSet)
         {
-            if currTrip.end == currTrip.current
+            if currTrip.current == currTrip.end
             {
                 var airlineFlag := 0;
                 if query.pref1 == ffPoint && query.airlinePref != "None"
@@ -250,7 +259,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
                 }
             } else {
                 var appendList := [];
-				assume currTrip.current != null; //sneaky assume due to the fact that we're not taking in a 'query'
+				//assume currTrip.current != null; //sneaky assume due to the fact that we're not taking in a 'query'
 									//(no handling of inputs in dafny) hence currTrip may have null stuff 
                 appendList := g.getFlights(currTrip);
 
@@ -284,6 +293,8 @@ method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq
 
 method deepcopy(oldT: Trip) returns (newT: Trip)
     requires oldT != null;
+    requires oldT.start != null;
+    requires oldT.end != null;
     ensures newT != null;
     ensures fresh(newT);
     ensures newT.startCal == oldT.startCal;
