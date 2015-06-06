@@ -34,6 +34,18 @@ class Flight:
 
 class Trip:
     def __init__(self,date,time,start,end,airlinePref):
+        """
+        ensures self.startCal == minutes;
+        ensures self.start == start;
+        ensures self.current == start;
+        ensures self.end == end;
+        ensures self.currCal == this.startCal;
+        ensures self.cost == 0;
+        ensures self.ffPoint == 0;
+        ensures self.airlinePref == airlinePref;
+        ensures self.listFlights == [];
+        modifies self;
+        """
         self.startCal = self.convertTime(date,time)
         self.start = start
         self.current = start
@@ -57,6 +69,11 @@ class Trip:
         return x
 
     def appendFlight(self,newFlight):
+        """
+        requires newFlight != null;
+        modifies this;
+        """
+
         """ This adds the flight 'newFlight' onto the end of the list of flights in 'listFlights'
         Takes in:
             Flight: newFlight
@@ -72,6 +89,9 @@ class Trip:
         self.listFlights.append(newFlight)
 
     def addDuration(self,startDate, flight):
+        """
+        requires flight != null;
+        """
         """ This adds the time that the entered flight takes onto the current time
         Takes in:
         DateTime: startDate

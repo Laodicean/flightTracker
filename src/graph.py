@@ -16,6 +16,16 @@ class Graph():
         self.cities = cities
 
     def getFlights(self, trip):
+        """
+        Precondition: 
+            trip != null;
+            & trip.current != null;
+            & self.cities != [] && null !in self.cities && forall c: City | c in self.cities :: null !in c.flights
+        Postcondition: return potFlights 
+            potFlights != [] ==> (forall x1 : Flight :: x1 != null && x1 in potFlights ==> x.currCal < x1.minutes)
+            && potFlights == [] ==> (forall x1 : Flight :: x1 != null && x1 !in potFlights)
+        """
+
         """gets all VALID flights related to the latest city from the input TRIP
         from the graph"""
 
@@ -25,6 +35,10 @@ class Graph():
 
         #for everything that trip.curr connects to
         for flight in currentCity.flights:
+            """
+            invariant potFlights == [] ==> (forall x1 : Flight :: x1 in currentCity.flights ==> x1 !in potFlights) 
+                && potFlights != [] ==> (forall x1 : Flight :: x1 in currentCity.flights && x1.minutes > trip.currCal ==> x1 in potFlights);
+            """
             if (trip.convertTime(flight.date, flight.time) > trip.currCal):
                 potFlights.append(flight)
                 #tripCal = dateTime()
@@ -45,10 +59,20 @@ class Graph():
                     aNames.append(f.airline)
         return sorted(aNames)
 
-def getIndex(cities, searchingFor):
+def getIndex(cities, searchingFor): 
+    """
+    Precondition: 
+        cities != []; & searchingFor != null;
+    Postcondition: return z
+        z < |citys|; 
+    """
     """returns the index of a specified city in the cities list """
     i = -1
     for city in cities:
+        """
+        invariant j <= |citys|;
+        invariant forall i: nat :: i < j ==> cities[i] != searchingFor;
+        """
         i+=1
         if city.name == searchingFor:
             return i
