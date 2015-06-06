@@ -50,7 +50,7 @@ class Graph():
         for c in self.cities:
             cNames.append(c.name)
         return cNames
-
+    
     def getAirlines(self):
         aNames = []
         for c in self.cities:
@@ -67,17 +67,11 @@ def getIndex(cities, searchingFor):
         z < |citys|; 
     """
     """returns the index of a specified city in the cities list """
-    i = -1
-    for city in cities:
-        """
-        invariant j <= |citys|;
-        invariant forall i: nat :: i < j ==> cities[i] != searchingFor;
-        """
-        i+=1
-        if city.name == searchingFor:
+    
+    for i in range(len(cities)):
+        if cities[i].name == searchingFor:
             return i
-    return 'no'
-
+    raise ValueError("{} not in cities list".format(searchingFor))
 
 
 #filename = sys.argv[1]
@@ -88,85 +82,87 @@ def makeGraph(filename):
     cities = []
     #.replace("]","")
     for flight in f.read().replace("\n","").replace(" ","").strip().split("["):
-        if flight != "":
-
-            parts = flight.split(',')
-
-
+        try:
+            if flight != "":
+                parts = flight.split(',')
+                tempDate = [int(i) for i in parts[0].split('/')]    
+                tempTime = [int(i) for i in parts[1].split(':')]
+                parts[4] = int(parts[4])
+                
                 #invalid entry cases
-            #Checking that the query has 8 parts
-            if len(parts) != 7:
-                print 'incorrectly formatted flight data'
-                continue
-            tempDate = parts[0].split['/']
-            #checking there are 3 parts of date
-            if len(tempDate) != 3:
-                print 'incorrectly formatted flight data'
-                continue
-            #checking they are all numbers
-            elif not isinstance( tempDate[0], int) and not isinstance( tempDate[1], int) and not isinstance( tempDate[2], int):
-                print 'incorrectly formatted flight data'
-                continue
-            #check the year is between 2000 and 2500 inclusive
-            elif tempDate[2] < 2000 or 2500 < tempDate[2]:
-                print 'incorrectly formatted flight data'
-                continue
-            tempTime = parts[1].split[':']
-            #checking time is number:number
-            if len(tempTime) != 2:
-                print 'incorrectly formatted flight data'
-                continue
-            #checking that the hours and minutes are integers
-            elif not isinstance( tempTime[0], int) and not isinstance( tempTime[1], int):
-                print 'incorrectly formatted flight data'
-                continue
-            #check for invalid date/time re datetime module
-            try:
-                datetime.datetime(tempDate[2],tempDate[1],tempDate[0],tempTime[0],tempTime[1]) #years, months, days, hours, minutes
-            except ValueError:
-                print 'Invalid date/time in entry: ' + flight
-                continue
-            
-            #check the names of cities and airlines are strings
-            if not isinstance( parts[2], str) and not isinstance(parts[3],str) and not isinstance(parts[5],str):
-                print 'incorrectly formatted flight data'
-                continue          
-            #check if the names start with a capital
-            elif not parts[2][0].isupper() and not parts[3][0].isupper() and not parts[5][0].isupper():
-                print 'incorrectly formatted flight data'
-                continue
-            #check the names of the cities are not the same
-            elif parts[2] == parts[3]:
-                print 'incorrectly formatted flight data'
-                continue
-            #checks duration is an integer
-            if not isinstance( parts[4], int):
-                print 'incorrectly formatted flight data'
-                continue
-            
-            #checking the close bracket is correctly placed
-            elif parts[6][-1] != ']':
-                print 'incorrectly formatted flight data'
-                continue
-            #checking that the cost is an integer
-            parts[6] = parts[6][:-1]
-            if not isinstance( parts[6], int):
-                print 'incorrectly formatted flight data'
-                continue
-            
+                #Checking that the query has 8 parts
+                if len(parts) != 7:
+                    print ('incorrectly formatted flight data')
+                    print("len(parts) = {}".format(len(parts)))
+                    continue
+                #checking there are 3 parts of date
+                if len(tempDate) != 3:
+                    print ('incorrectly formatted flight data')
+                    print ("Fuck you greg")
+                    continue
+                    
+                #check the year is between 2000 and 2500 inclusive
+                if tempDate[2] < 2000 or 2500 < tempDate[2]:
+                    print ('incorrectly formatted flight data')
+                    print ("This code is so bad")
+                    continue
+                #checking time is number:number
+                if len(tempTime) != 2:
+                    print ('incorrectly formatted flight data')
+                    print ("It's giving me AIDS")
+                    continue
 
-            #Checking if we already have the city
-            foundCity = getIndex(cities, parts[2])
-            foundDest = getIndex(cities, parts[3])
-            #if the city did not already exist
-            if foundDest == 'no':
-                cities.append(City(parts[3]))
-            if foundCity == 'no':
-                cities.append(City(parts[2]))
-                foundCity = -1
+                #check for invalid date/time re datetime module
+                try:
+                    datetime.datetime(tempDate[2],tempDate[1],tempDate[0],tempTime[0],tempTime[1]) #years, months, days, hours, minutes
+                except ValueError:
+                    print ('Invalid date/time in entry:[' + flight)
+                    print ("1")
+                    continue
+                
+                #check if the names start with a capital
+                if not parts[2][0].isupper() and not parts[3][0].isupper() and not parts[5][0].isupper():
+                    print ('incorrectly formatted flight data')
+                    print ("5")
+                    continue
 
-            myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], int(parts[4]), parts[5], int(parts[6]))
-            cities[foundCity].flights.append(myFlight)
+                #check the names of the cities are not the same
+                if parts[2] == parts[3]:
+                    exit("incorrectly formatted flight data")
+                    
+                #checking the close bracket is correctly placed
+                if parts[6][-1] != ']':
+                    exit("incorrectly formatted flight data")
+
+                #checking that the cost is an integer
+                parts[6] = int(parts[6][:-1])
+                
+
+                #Checking if we already have the city
+                try:
+                    getIndex(cities,parts[2])
+                except ValueError:
+                    cities.append(City(parts[2]))
+
+                try:
+                    getIndex(cities,parts[3])
+                except ValueError:
+                    cities.append(City(parts[3]))
+
+                #foundCity = getIndex(cities, parts[2])
+                #foundDest = getIndex(cities, parts[3])
+                #if the city did not already exist
+                #if foundDest == 'no':
+                #    cities.append(City(parts[3]))
+                #if foundCity == 'no':
+                #    cities.append(City(parts[2]))
+                #    foundCity = -1
+
+                myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], int(parts[4]), parts[5], int(parts[6]))
+                cities[getIndex(cities, parts[2])].flights.append(myFlight)
+        except ValueError as e:
+            print(e)
+            continue
     return Graph(cities)
 
 """
