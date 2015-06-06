@@ -86,10 +86,74 @@ def makeGraph(filename):
     returns a list of cities (each containing a list of flights)"""
     f = open(filename, 'r')
     cities = []
-    for flight in f.read().replace("\n","").replace("]","").replace(" ","").strip().split("["):
+    #.replace("]","")
+    for flight in f.read().replace("\n","").replace(" ","").strip().split("["):
         if flight != "":
 
             parts = flight.split(',')
+
+
+                #invalid entry cases
+            #Checking that the query has 8 parts
+            if len(parts) != 7:
+                print 'incorrectly formatted flight data'
+                continue
+            tempDate = parts[0].split['/']
+            #checking there are 3 parts of date
+            if len(tempDate) != 3:
+                print 'incorrectly formatted flight data'
+                continue
+            #checking they are all numbers
+            elif not isinstance( tempDate[0], int) and not isinstance( tempDate[1], int) and not isinstance( tempDate[2], int):
+                print 'incorrectly formatted flight data'
+                continue
+            #check the year is between 2000 and 2500 inclusive
+            elif tempDate[2] < 2000 or 2500 < tempDate[2]:
+                print 'incorrectly formatted flight data'
+                continue
+            tempTime = parts[1].split[':']
+            #checking time is number:number
+            if len(tempTime) != 2:
+                print 'incorrectly formatted flight data'
+                continue
+            #checking that the hours and minutes are integers
+            elif not isinstance( tempTime[0], int) and not isinstance( tempTime[1], int):
+                print 'incorrectly formatted flight data'
+                continue
+            #check for invalid date/time re datetime module
+            try:
+                datetime.datetime(tempDate[2],tempDate[1],tempDate[0],tempTime[0],tempTime[1]) #years, months, days, hours, minutes
+            except ValueError:
+                print 'Invalid date/time in entry: ' + flight
+                continue
+            
+            #check the names of cities and airlines are strings
+            if not isinstance( parts[2], str) and not isinstance(parts[3],str) and not isinstance(parts[5],str):
+                print 'incorrectly formatted flight data'
+                continue          
+            #check if the names start with a capital
+            elif not parts[2][0].isupper() and not parts[3][0].isupper() and not parts[5][0].isupper():
+                print 'incorrectly formatted flight data'
+                continue
+            #check the names of the cities are not the same
+            elif parts[2] == parts[3]:
+                print 'incorrectly formatted flight data'
+                continue
+            #checks duration is an integer
+            if not isinstance( parts[4], int):
+                print 'incorrectly formatted flight data'
+                continue
+            
+            #checking the close bracket is correctly placed
+            elif parts[6][-1] != ']':
+                print 'incorrectly formatted flight data'
+                continue
+            #checking that the cost is an integer
+            parts[6] = parts[6][:-1]
+            if not isinstance( parts[6], int):
+                print 'incorrectly formatted flight data'
+                continue
+            
 
             #Checking if we already have the city
             foundCity = getIndex(cities, parts[2])
@@ -115,3 +179,4 @@ for flights:query in q.read().strip().split("["):
         myQuery = Query(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],parts[6],parts[7])
         algorithm.getFlightSolutions(myQuery,cities)
 """
+
