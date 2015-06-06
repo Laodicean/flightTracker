@@ -44,8 +44,8 @@ class Trip {
 	var listFlights: seq<Flight>;
 
     constructor init(minutes: int, start: City, end: City, airlinePref: string)
-        requires start != null;
-		requires end != null;
+        //requires start != null;
+		//requires end != null;
 		ensures this.startCal == minutes;
         ensures this.start == start;
         ensures this.current == start;
@@ -220,7 +220,10 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
 	//need to ensure a closed graph...
     while !openQueue.empty()
         invariant null !in openQueue.value;
+        invariant forall t: Trip | t in openQueue.value :: fresh(t);
         invariant forall t: Trip | t in openQueue.value :: t.current != null;
+        invariant forall t: Trip | t in openQueue.value :: (forall f: Flight | f in t.listFlights :: f != null);
+        //invariant forall t: Trip | t in openQueue.value :: t != firstTrip ==> |t.listFlights| > 0;
 		//I1
 		//invariant 	
 		decreases (|openQueue.value|);
@@ -293,8 +296,8 @@ method sortFlights(flightList: seq<Trip>, query: Query) returns (sortedList: seq
 
 method deepcopy(oldT: Trip) returns (newT: Trip)
     requires oldT != null;
-    requires oldT.start != null;
-    requires oldT.end != null;
+    //requires oldT.start != null;
+    //requires oldT.end != null;
     ensures newT != null;
     ensures fresh(newT);
     ensures newT.startCal == oldT.startCal;
