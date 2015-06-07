@@ -49,7 +49,6 @@ def searchFlights(query,g):
         	if airlineFlag == 0:	#currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
 		        currTrip.startCal = currTrip.convertTime(currTrip.listFlights[0].date,currTrip.listFlights[0].time)
 		        currTrip.currCal = int((time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple()))/60) #currCal may or may not be the right place to put this
-		        currTrip.ffPoint = currTrip.ffPoint // 60
 		        solutions.append(currTrip)
         else:
             appendList = []
