@@ -1,3 +1,5 @@
+
+
 datatype preferences = Time | Cost | ffPoint
 
 
@@ -181,6 +183,7 @@ class Graph {
 	
 predicate correctQuery(q: Query)
     reads q;
+
 {
     q != null && q.start != null && q.end != null
 }
@@ -191,6 +194,46 @@ predicate correctCities(cities: seq<City>)
     cities != [] && null !in cities && forall c: City | c in cities :: null !in c.flights
 }
 
+//following predicates are used to justify the closedGraph one, which helps with search
+//however..there an issue with reads clause that is not allowing me to access things..
+//should appear as: all c: City :: c == graph.cities[x].flight[x].end ==> c in graph.cities
+//should appear as: all c: City :: c == graph.cities[x].flight[x].start ==> c in graph.cities
+//should appear as: all c: City :: c in graph.cities ==> c == graph.cities[x].flight[x].end
+//should appear as: all c: City :: c in graph.cities ==> c == graph.cities[x].flight[x].end
+function method flightsInGraph (f: Flight, g:Graph) : bool
+	reads f;
+	reads g;
+	{
+		g != null && f != null && f.end in g.cities && f.start in g.cities
+	}
+
+function method citiesFlightInGraph(f: seq<Flight>, g: Graph) : bool
+	reads g;
+	reads f;
+	reads if forall i: nat | i < |f| :: null != f[i] then f[..] else [] 
+{
+	g != null && null !in f && forall i: nat | i < |f| :: flightsInGraph(f[i] , g)
+}
+
+function method cityInGraph(c: City, g: Graph) : bool
+	reads g;
+	reads c;
+	requires c != null
+	reads if c != null && forall i: nat | i < |c.flights| :: null !in c.flights then c.flights else [] 
+	reads if c != null then c.flights[..] else []
+{	
+	g != null && c != null && null !in c.flights && 
+	forall i: nat | i < |c.flights| :: citiesFlightInGraph(c.flights, g) && 
+	(exists x: City | x in g.cities :: x == c) &&
+	(exists x: City | x in g.cities :: c == x)
+}
+
+predicate closedGraph(g: Graph) //usually passing City.flights and Graphs.cities
+	reads g;
+{
+	g != null && null !in g.cities && forall i: nat | i < | g.cities | :: cityInGraph(g.cities[i], g)
+}
+	
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires correctQuery(query);
     requires g != null;
@@ -209,6 +252,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     requires correctQuery(query);
     requires g != null;
     requires correctCities(g.cities);
+	//ensures |g.cities| ;
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
