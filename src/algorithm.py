@@ -5,6 +5,12 @@ from operator import itemgetter
 from queue import Queue #no module named queue?
 from copy import deepcopy
 def getFlightSolutions(query,g):
+    """
+    Precondition: 
+        query != null && query.start != null && query.end != null
+        && g != null;
+        && g.cities != [] && null !in g.cities && forall c: City | c in g.cities :: null !in c.flights
+    """
     """Retrieves a list of Trips containing soultions to the given query
     query: query object containing parameters for the search
     graph: Graph of cities
@@ -14,12 +20,22 @@ def getFlightSolutions(query,g):
     return flightList[:query.numFlights]
 
 def searchFlights(query,g):
+    """
+    Precondition:
+        query != null && query.start != null && query.end != null
+        && g != null;
+        && g.cities != [] && null !in g.cities && forall c: City | c in g.cities :: null !in c.flights
+    """
     openQueue = Queue()
     closedSet = set()
     solutions = []
     firstTrip = flightClasses.Trip(query.date,query.time,query.start,query.end,query.airlinePref)
     openQueue.put(firstTrip)
     while( not openQueue.empty()):
+        """
+        invariant forall t: Trip | t in openQueue.value :: t.current != null;
+        invariant forall t: Trip | t in openQueue.value :: (forall f: Flight | f in t.listFlights :: f != null);
+        """
         currTrip = openQueue.get()
         if currTrip in closedSet:
             continue
@@ -48,6 +64,10 @@ def searchFlights(query,g):
 
 
 def sortFlights(flightList,query):
+    """
+    Precondition:
+        query != null
+    """
     if query.pref1 == "Cost":
         if query.pref2 == "Time":
             return sorted(flightList, key=lambda f:(f.cost, f.currCal, -f.ffPoint))
