@@ -155,7 +155,7 @@ class Graph {
 	}
 
 	method getIndex(citys: seq<City>, searchingFor: City) returns (z : int)
-		requires citys != [];
+		//requires citys != [];
 		requires searchingFor != null;
 		ensures z < |citys|;
 		{
@@ -188,13 +188,20 @@ predicate correctQuery(q: Query)
 predicate correctCities(cities: seq<City>)
     reads cities;
 {
-    cities != [] && null !in cities && forall c: City | c in cities :: null !in c.flights
+    null !in cities && forall c: City | c in cities :: null !in c.flights
+}
+
+predicate flightInGraph(f: Flight, g: Graph)
+    reads f, g;
+{
+    g != null && f != null && f.end in g.cities && f.start in g.cities
 }
 
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
 	requires correctQuery(query);
     requires g != null;
     requires correctCities(g.cities);
+    requires forall c: City | c in g.cities :: forall f: Flight | f in c.flights :: flightInGraph(f, g);
     //ensures that flightList matches the spec!
 {
 
@@ -209,6 +216,7 @@ method searchFlights(query: Query, g: Graph) returns (solutions: seq<Trip>)
     requires correctQuery(query);
     requires g != null;
     requires correctCities(g.cities);
+    requires forall c: City | c in g.cities :: forall f: Flight | f in c.flights :: flightInGraph(f, g);
 {
     var openQueue := new Queue<Trip>.init();
     var closedSet: set<Trip>;
