@@ -2,11 +2,11 @@
 import time, datetime
 import flightClasses
 from operator import itemgetter
-from queue import Queue #no module named queue?
+from queue import Queue
 from copy import deepcopy
 def getFlightSolutions(query,g):
     """
-    Precondition: 
+    Precondition:
         query != null && query.start != null && query.end != null
         && g != null;
         && g.cities != [] && null !in g.cities && forall c: City | c in g.cities :: null !in c.flights
@@ -45,7 +45,7 @@ def searchFlights(query,g):
         		for lookFlight in currTrip.listFlights:
         			if lookFlight.airline != query.airlinePref:
         				airlineFlag = 1
-        	
+
         	if airlineFlag == 0:	#currTrip.currCal = the amount of time between the provided start date and the eventual arrival time.
 		        currTrip.startCal = currTrip.convertTime(currTrip.listFlights[0].date,currTrip.listFlights[0].time)
 		        currTrip.currCal = int((time.mktime(currTrip.currCal.timetuple()) - time.mktime(currTrip.startCal.timetuple()))/60) #currCal may or may not be the right place to put this
