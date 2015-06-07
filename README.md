@@ -1,29 +1,13 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This README is here to explain how to run this system via the command line.
 
-### What is this repository for? ###
+### How do I run this System ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+In order to properly run this command, you'll need to know the location of a file that contians any querys that need to be searched for,
+as well as a file containing the flights that need to be entered into the graph.
 
-### How do I get set up? ###
+In order to run the system, go to the folder labelled "src"
+and run the command: 
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+./travelplan <File with the flight data> <File with the query data>
