@@ -17,11 +17,11 @@ class Graph():
 
     def getFlights(self, trip):
         """
-        Precondition: 
+        Precondition:
             trip != null;
             & trip.current != null;
             & self.cities != [] && null !in self.cities && forall c: City | c in self.cities :: null !in c.flights
-        Postcondition: return potFlights 
+        Postcondition: return potFlights
             potFlights != [] ==> (forall x1 : Flight :: x1 != null && x1 in potFlights ==> x.currCal < x1.minutes)
             && potFlights == [] ==> (forall x1 : Flight :: x1 != null && x1 !in potFlights)
         """
@@ -36,7 +36,7 @@ class Graph():
         #for everything that trip.curr connects to
         for flight in currentCity.flights:
             """
-            invariant potFlights == [] ==> (forall x1 : Flight :: x1 in currentCity.flights ==> x1 !in potFlights) 
+            invariant potFlights == [] ==> (forall x1 : Flight :: x1 in currentCity.flights ==> x1 !in potFlights)
                 && potFlights != [] ==> (forall x1 : Flight :: x1 in currentCity.flights && x1.minutes > trip.currCal ==> x1 in potFlights);
             """
             if (trip.convertTime(flight.date, flight.time) > trip.currCal):
@@ -50,7 +50,7 @@ class Graph():
         for c in self.cities:
             cNames.append(c.name)
         return cNames
-    
+
     def getAirlines(self):
         aNames = []
         for c in self.cities:
@@ -59,15 +59,15 @@ class Graph():
                     aNames.append(f.airline)
         return sorted(aNames)
 
-def getIndex(cities, searchingFor): 
+def getIndex(cities, searchingFor):
     """
-    Precondition: 
+    Precondition:
         cities != []; & searchingFor != null;
     Postcondition: return z
-        z < |citys|; 
+        z < |citys|;
     """
     """returns the index of a specified city in the cities list """
-    
+
     for i in range(len(cities)):
         if cities[i].name == searchingFor:
             return i
@@ -85,32 +85,24 @@ def makeGraph(filename):
         try:
             if flight != "":
                 parts = flight.split(',')
-                tempDate = [int(i) for i in parts[0].split('/')]    
+                tempDate = [int(i) for i in parts[0].split('/')]
                 tempTime = [int(i) for i in parts[1].split(':')]
                 parts[4] = int(parts[4])
-                
+
                 #invalid entry cases
                 #Checking that the query has 8 parts
                 if len(parts) != 7:
-                    print ('incorrectly formatted flight data')
-                    print("len(parts) = {}".format(len(parts)))
-                    continue
+                    exit("incorrectly formatted flight data")
                 #checking there are 3 parts of date
                 if len(tempDate) != 3:
-                    print ('incorrectly formatted flight data')
-                    print ("Fuck you greg")
-                    continue
-                    
+                    exit("incorrectly formatted flight data")
+
                 #check the year is between 2000 and 2500 inclusive
                 if tempDate[2] < 2000 or 2500 < tempDate[2]:
-                    print ('incorrectly formatted flight data')
-                    print ("This code is so bad")
-                    continue
+                    exit("incorrectly formatted flight data")
                 #checking time is number:number
                 if len(tempTime) != 2:
-                    print ('incorrectly formatted flight data')
-                    print ("It's giving me AIDS")
-                    continue
+                    exit("incorrectly formatted flight data")
 
                 #check for invalid date/time re datetime module
                 try:
@@ -119,24 +111,22 @@ def makeGraph(filename):
                     print ('Invalid date/time in entry:[' + flight)
                     print ("1")
                     continue
-                
+
                 #check if the names start with a capital
                 if not parts[2][0].isupper() and not parts[3][0].isupper() and not parts[5][0].isupper():
-                    print ('incorrectly formatted flight data')
-                    print ("5")
-                    continue
+                    exit("incorrectly formatted flight data")
 
                 #check the names of the cities are not the same
                 if parts[2] == parts[3]:
                     exit("incorrectly formatted flight data")
-                    
+
                 #checking the close bracket is correctly placed
                 if parts[6][-1] != ']':
                     exit("incorrectly formatted flight data")
 
                 #checking that the cost is an integer
                 parts[6] = int(parts[6][:-1])
-                
+
 
                 #Checking if we already have the city
                 try:
@@ -149,30 +139,11 @@ def makeGraph(filename):
                 except ValueError:
                     cities.append(City(parts[3]))
 
-                #foundCity = getIndex(cities, parts[2])
-                #foundDest = getIndex(cities, parts[3])
-                #if the city did not already exist
-                #if foundDest == 'no':
-                #    cities.append(City(parts[3]))
-                #if foundCity == 'no':
-                #    cities.append(City(parts[2]))
-                #    foundCity = -1
 
                 myFlight = flightClasses.Flight(parts[0], parts[1], parts[2], parts[3], int(parts[4]), parts[5], int(parts[6]))
                 cities[getIndex(cities, parts[2])].flights.append(myFlight)
         except ValueError as e:
-            print(e)
-            continue
+            exit("incorrectly formatted flight data")
     return Graph(cities)
 
-"""
-filename = sys.argv[2]
-q = open(filename, 'r')
-for flights:query in q.read().strip().split("["):
-    if query != "":
-        parts = query.split(',')
-        #WARNING SEE SPEC FOR PROPER PREFERENCES INPUT FORMAT
-        myQuery = Query(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],parts[6],parts[7])
-        algorithm.getFlightSolutions(myQuery,cities)
-"""
 
