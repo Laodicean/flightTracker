@@ -1,2 +1,2 @@
 #!/bin/bash
-python3.4 printall.py $1 $2
+python3  ../src/printall.py $1 $2
