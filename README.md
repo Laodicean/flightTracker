@@ -15,14 +15,26 @@ third party libraries for GUI implementation. These are:
 
   Tornado Web Server  -   http://www.tornadoweb.org/en/stable/
     Lightweight Python web server library, which supports several useful features
-    such as templating.
+    such as templating. The required library files are in src/tornado.
 
   Bootstrap           -   http://getbootstrap.com/
-    Web framwork for development of the front end.
+    Web framwork for development of the front end. It is linked in HTML, and no files
+    are stored with the project.
 
   JQuery              -   https://jquery.com/
     Javascript library which provides major javascript functionality, used for
-    development of the front end.
+    development of the front end. As above, we link CDN hosted jquery source in HTML,
+    and no files are stored with the project.
+
+The git repository for the assignment is accessible here:
+https://bitbucket.org/nathys/flighttracker
+
+Additionally, for a period of several months after submission, git statistics are accessible here:
+http://brendanr.net/FlightStats/index.html
+
+It is worth noting that while Brendan Roy is a great developer, a little over 30000 of his lines committed
+are tornado library files.
+
 
 ### How do I run this System ###
 
