@@ -5,7 +5,7 @@ import graph
 import flightClasses
 import algorithm
 
-g = graph.makeGraph("testdata2")
+g = graph.makeGraph("testFiles/testdata2")
 
 class LandingHandler(tornado.web.RequestHandler):
     """Class which allows users to make requests for flights
