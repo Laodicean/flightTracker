@@ -1,3 +1,0 @@
-[Date1,Time1,Name1,Name1,Duration1,Name1,Number1]
-[Date2,Time2,Name2,Name2,Duration2,Name2,Number2]
-
