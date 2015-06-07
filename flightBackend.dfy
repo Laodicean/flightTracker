@@ -194,7 +194,8 @@ predicate correctCities(cities: seq<City>)
 predicate flightInGraph(f: Flight, g: Graph)
     reads f, g;
 {
-    g != null && f != null && f.end in g.cities && f.start in g.cities
+    g != null && f != null && f.end in g.cities && f.start in g.cities && 
+		exists t: City | t in g.cities :: t == f.end && exists t: City | t in g.cities :: t == f.start
 }
 
 method getFlightSolutions(query: Query, g: Graph) returns (flightList: seq<Trip>)
