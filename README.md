@@ -1,14 +1,14 @@
 # README #
 
 This is the SENG2011 Project (ass4) submission for
-  z5018670 | Kirsten Hendriks
-  z5017806 | Nathan Sher
-  z5019614 | Ben Timbrell
-  z3424596 | Brayden Morris
-  z5017725 | Brendan Roy
-  z5020633 | Gregory Chernishov
-  z5015972 | Vi Nguyen
-  z3493000 | Jackson Cung
+   Kirsten Hendriks
+   Nathan Sher
+   Ben Timbrell
+   Brayden Morris
+   Brendan Roy
+   Gregory Chernishov
+   Vi Nguyen
+   Jackson Cung
 
 The solution is implemented in python3, and utilises some open source
 third party libraries for GUI implementation. These are:
